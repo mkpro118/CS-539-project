@@ -1,7 +1,10 @@
 from functools import wraps
 from typing import Callable, Union
 from traceback import format_exception
-from typesafety import type_safe
+try:
+    from typesafety import type_safe
+except ImportError:
+    from .typesafety import type_safe
 
 # default message if a message dict is missing a certain exception
 DEFAULT_MSG = lambda e: f'''No Error message specified for {str(type(e)).split("'")[1]}'''
