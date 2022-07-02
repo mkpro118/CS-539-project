@@ -1,8 +1,8 @@
 # Major Structure Update
 
 ## Change Log
-+ The neural_network api is now more modular.
-+ More details have been added.
++ The neural_network api is now more modular
++ More details have been added
 + Module `neural_network.base` has been added, which now contains mixins for other classes
     + Some mixins have been added, authors are welcome to add more as they please.
 + Module [`neural_network.utils`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/utils) has been added, which currently contains some utility decorators. Authors are welcome to add more utility functions as they please
@@ -14,6 +14,7 @@
     + [`typesafety`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/typesafety.py)
         + [`type_safe`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/typesafety.py#L10) decorator has been implemented
         + [`not_none`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/typesafety.py#L161) decorator has been implemented
++ Module `neural_network.aux_math` has been added, which contains auxillary functions to properly perform mathematical operations on tensors.
 
 ## New Project Structure
 
@@ -28,11 +29,6 @@
 │    │    ├── rook/*.jpg
 │    ├── dataset.py
 ├── neural_network/
-│    ├── utils/
-│    │    ├── __init__.py
-│    │    ├── exceptions_handling.py
-│    │    ├── exports.py
-│    │    ├── typesafety.py
 │    ├── activation/
 │    │    ├── __init__.py
 │    │    ├── leaky_relu.py
@@ -40,6 +36,12 @@
 │    │    ├── sigmoid.py
 │    │    ├── softmax.py
 │    │    ├── tanh.py
+│    ├── aux_math/
+│    │    ├── __init__.py
+│    │    ├── mat_dot.py
+│    │    ├── mat_mul.py
+│    │    ├── correlate.py
+│    │    ├── convolve.py
 │    ├── base/
 │    │    ├── __init__.py
 │    │    ├── activation_mixin.py
@@ -95,6 +97,11 @@
 │    │    ├── one_hot_encoder.py
 │    │    ├── scaler.py
 │    │    ├── standardizer.py
+│    ├── utils/
+│    │    ├── __init__.py
+│    │    ├── exceptions_handling.py
+│    │    ├── exports.py
+│    │    ├── typesafety.py
 │    ├── __init__.py
 ├── __init__.py
 ├── main.py
