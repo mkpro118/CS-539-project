@@ -14,6 +14,8 @@ def type_safe(func: Callable):
     Ensures there's no type mismatch over the parameters which are
     annotated with types.
 
+    Considers multiple types subcripted under `typing.Union`
+
     Does not affect parameters that are not annotated, they're defaulted
     to be of type object.
 
@@ -57,7 +59,8 @@ def type_safe(func: Callable):
         * NoneTypes are NOT considered for type mismatch
             Consider using the not_none decorator for null safety
         * VarArgs are not type checked
-        * Known Bug: Doesn't work on nested subscripted generic aliases
+        * Known Bug: Doesn't work on subscripted generic aliases except Union
+        * Known Bug: Doesn't work on nested subscripted Union generic aliases
     '''
 
     # Ensure `func` is a callable to be decorated
