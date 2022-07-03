@@ -1,4 +1,4 @@
-# Major Structure Update
+# Update Logs
 
 ## Change Log (July 4, 2022)
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base) has been added and fully implemented. Authors are welcome to add any other mixins as they please.
