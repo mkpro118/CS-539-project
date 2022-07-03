@@ -1,6 +1,13 @@
 # Major Structure Update
 
-## Change Log
+## Change Log (July 4, 2022)
++ Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base) has been added and fully implemented. Authors are welcome to add any other mixins as they please.
+    + Removed `decompostion_mixin.py`, `exception_mixin.py`, `fit_mixin.py`, `solver_mixin.py`
+    + Renamed `save_model_mixin.py` to [`save_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/save_mixin.py)
+    + Added [`mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/mixin.py), [`metadata_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/metadata_mixin.py)
+    + TODO: Add docstrings to all files under `neural_network.base`
+
+## Change Log (July 2, 2022)
 + The neural_network api is now more modular
 + More details have been added
 + Module `neural_network.base` has been added, which now contains mixins for other classes
@@ -47,13 +54,11 @@
 │    │    ├── activation_mixin.py
 │    │    ├── cost_mixin.py
 │    │    ├── classifier_mixin.py
-│    │    ├── decomposition_mixin.py
-│    │    ├── exception_mixin.py
-│    │    ├── fit_mixin.py
 │    │    ├── layer_mixin.py
+│    │    ├── metadata_mixin.py
+│    │    ├── mixin.py
 │    │    ├── model_mixin.py
-│    │    ├── solver_mixin.py
-│    │    ├── save_model_mixin.py
+│    │    ├── save_mixin.py
 │    │    ├── transform_mixin.py
 │    ├── cost/
 │    │    ├── __init__.py
