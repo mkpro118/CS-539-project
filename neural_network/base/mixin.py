@@ -5,6 +5,13 @@ from ..utils.typesafety import type_safe
 
 @type_safe
 def mixin(cls: type) -> type:
+    '''
+    Marks a class as a mixin and prevents the instantiation of the mixin class
+
+    Doesn't affect the existing `__init__` method defined by the Mixin class,
+    just decorates it to check that the object is not of the type defined by
+    the mixin.
+    '''
 
     @type_safe
     def mixin_decorator(func: Callable) -> Callable:

@@ -1,3 +1,5 @@
+'''Allow classes to be accesed from package level imports'''
+
 from .activation_mixin import ActivationMixin
 from .classifier_mixin import ClassifierMixin
 from .cost_mixin import CostMixin

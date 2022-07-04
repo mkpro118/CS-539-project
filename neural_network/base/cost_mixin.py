@@ -1,44 +1,56 @@
-import numpy as np
-
 from .mixin import mixin
 from .layer_mixin import LayerMixin
-from ..utils.typesafety import type_safe
 
 
-@mixin
+@mixin  # Prevents instantiation
 class CostMixin(LayerMixin):
+    '''
+    Mixin Class for all Cost Layers
+
+    Provides methods to performs forward and backward propagation through this
+    layer
+
+    Requires all derived class to define at least 2 methods,
+    `cost` and `cost_derivative`, which contain the logic and
+    mathematical operations for the cost function
+
+    Both `cost` and `cost_derivative` must take in exactly 1 positional
+    argument. It is guaranteed that the arguments passed into both `cost`
+    and `cost_derivative` is of type numpy.ndarray
+
+    Inherited from LayerMixin
+        `get_metadata`
+    '''
+
     def __init__(self):
         errors = []
 
+        # Ensure that the subclass defines method `cost`
         cost_fn = getattr(self, 'cost', None)
         if not callable(cost_fn):
             errors.append(
                 f'{self.__class__} must explicitly define the '
-                f'`cost_derivative(self, input_)` function to specify '
-                f'the derivative of the cost function'
+                f'`cost(input_: np.ndarray) -> np.ndarray` '
+                f'function to specify the cost function'
             )
 
+        # Ensure that the subclass defines method `cost_derivative`
         derivative_fn = getattr(self, 'cost_derivative', None)
         if not callable(derivative_fn):
             errors.append(
                 f'{self.__class__} must explicitly define the '
-                f'`cost(self, input_)` function to specify the cost function'
+                f'`cost_derivative(input_: np.ndarray) -> np.ndarray` '
+                f'function to specify the derivative of the cost function'
             )
 
         if (n := len(errors)) > 0:
             errors = '\n'.join(errors)
-            raise TypeError(f'{n} errors in {self.__class__}\n{errors}')
+            raise TypeError(
+                f'{n} error{"s" if n > 1 else ""} in {self.__class__}\n{errors}'
+            )
 
     def __str__(self):
         return f'{self.__class__} | Cost Layer'
 
     def __repr__(self):
         return str(self)
-
-    @type_safe(skip=('self',))
-    def backward(self, input_: np.ndarray) -> np.ndarray:
-        return input_ * self.cost_derivative(input_)
-
-    @type_safe(skip=('self',))
-    def forward(self, input_: np.ndarray) -> np.ndarray:
-        return self.cost(input_)
