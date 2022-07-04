@@ -14,7 +14,7 @@ class TransformMixin:
     transformation
 
     Methods:
-        `fit_transforms(X: numpy.ndarray, y: numpy.ndarray) -> numpy.ndarray`:
+        `fit_transform(X: numpy.ndarray, y: numpy.ndarray) -> numpy.ndarray`:
             Fits the transformer and applies the transformation
     '''
 
