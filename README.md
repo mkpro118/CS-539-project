@@ -5,7 +5,7 @@
     + Removed `decompostion_mixin.py`, `exception_mixin.py`, `fit_mixin.py`, `solver_mixin.py`
     + Renamed `save_model_mixin.py` to [`save_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/save_mixin.py)
     + Added [`mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/mixin.py), [`metadata_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/metadata_mixin.py)
-    + TODO: Add docstrings to all files under `neural_network.base`
+    + Added docstrings to all files under `neural_network.base`
 
 ## Change Log (July 2, 2022)
 + The neural_network api is now more modular
