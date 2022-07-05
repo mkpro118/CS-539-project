@@ -10,9 +10,10 @@ OBJ_ATTRS = dir(object)
 @not_none
 def ATTR_FILTER(attr: str) -> bool:
     '''
-    Filter attributes based on 2 criteria
+    Filter attributes based on 3 criteria
         1. It must be defined in the class, not inherited from object
         2. It must not be a dunder attribute
+        3. It must not be a private attribute (starting with underscore)
 
     Parameters:
         attr: str
@@ -23,7 +24,8 @@ def ATTR_FILTER(attr: str) -> bool:
     '''
     in_obj = attr in OBJ_ATTRS
     is_dunder = attr.startswith('__') and attr.endswith('__')
-    return not any(in_obj, is_dunder)
+    is_private = attr.startswith('_')
+    return not any((in_obj, is_dunder, is_private))
 
 
 @mixin  # Prevents instantiation
@@ -47,6 +49,7 @@ class MetadataMixin:
         Attributes are filtered according to the following criteria
             1. It must be defined in the class, not inherited from object
             2. It must not be a dunder (magic) method/attribute
+            3. It must not be a private (start with underscore) method/attribute
 
         Parameters:
             None
