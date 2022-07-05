@@ -12,6 +12,7 @@ class LayerMixin(MetadataMixin):
     Inherited from MetadataMixin
         method `get_metadata` to computer layer's metadata
     '''
+
     def __str__(self):
         return f'{self.__class__} Layer'
 

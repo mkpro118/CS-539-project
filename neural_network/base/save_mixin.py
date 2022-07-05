@@ -2,7 +2,7 @@ from typing import Any
 from json import dumps
 
 from .mixin import mixin
-from ..utils.typesafety import type_safe
+from ..utils.typesafety import type_safe, not_none
 
 
 @mixin  # Prevents instantiation
@@ -14,6 +14,7 @@ class SaveMixin:
         `save(filename: str, data: Any) -> None`:
     '''
     @type_safe
+    @not_none(nullable=('data', 'return'))
     def save(self, filename: str, data: Any = None) -> None:
         '''
         Save attributes of an instance into a file in json format

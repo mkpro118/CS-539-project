@@ -13,7 +13,7 @@ from ..metrics import (
     precision_score,
     recall_score,
 )
-from ..utils.typesafety import type_safe
+from ..utils.typesafety import type_safe, not_none
 
 # default metric to use
 DEFAULT_METRIC = 'accuracy_score'
@@ -45,6 +45,7 @@ class ClassifierMixin:
     '''
 
     @type_safe
+    @not_none
     def score(self, X: np.ndarray, y: np.ndarray,
               metric: Union[str, Callable] = DEFAULT_METRIC) -> Union[np.ndarray, float]:
         '''

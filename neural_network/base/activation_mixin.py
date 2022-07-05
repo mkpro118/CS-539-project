@@ -2,7 +2,7 @@ import numpy as np
 
 from .mixin import mixin
 from .layer_mixin import LayerMixin
-from ..utils.typesafety import type_safe
+from ..utils.typesafety import type_safe, not_none
 
 
 @mixin  # Prevents instantiation
@@ -81,6 +81,7 @@ class ActivationMixin(LayerMixin):
         return str(self)
 
     @type_safe
+    @not_none
     def backward(self, input_: np.ndarray) -> np.ndarray:
         '''
         To perform backward propagation, using `activation_derivative`
@@ -97,6 +98,7 @@ class ActivationMixin(LayerMixin):
         return input_ * self.activation_derivative(input_)
 
     @type_safe
+    @not_none
     def forward(self, input_: np.ndarray) -> np.ndarray:
         '''
         To perform forward propagation, using `activation`

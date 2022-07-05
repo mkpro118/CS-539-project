@@ -2,7 +2,7 @@ import numpy as np
 from typing import Union
 
 from .mixin import mixin
-from ..utils.typesafety import type_safe
+from ..utils.typesafety import type_safe, not_none
 
 
 @mixin  # Prevents instantiation
@@ -19,8 +19,9 @@ class TransformMixin:
     '''
 
     @type_safe
+    @not_none(nullable=('y', ))
     def fit_transform(self, X: np.ndarray, y: np.ndarray = None, *,
-                      return_self: bool = False) -> Union[np.ndarray, tuple]:
+                      return_self: bool = False,) -> Union[np.ndarray, tuple]:
         '''
         Fits the transformer with inputs, then applies the transformation
 

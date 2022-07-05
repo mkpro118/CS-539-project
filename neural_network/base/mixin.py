@@ -1,9 +1,10 @@
 from functools import wraps
 from typing import Callable
-from ..utils.typesafety import type_safe
+from ..utils.typesafety import type_safe, not_none
 
 
 @type_safe
+@not_none
 def mixin(cls: type) -> type:
     '''
     Marks a class as a mixin and prevents the instantiation of the mixin class

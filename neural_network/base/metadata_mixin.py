@@ -1,12 +1,13 @@
 from .mixin import mixin
 
-from ..utils.typesafety import type_safe
+from ..utils.typesafety import type_safe, not_none
 
 # To compare with attribute inherited from object
 OBJ_ATTRS = dir(object)
 
 
 @type_safe
+@not_none
 def ATTR_FILTER(attr: str) -> bool:
     '''
     Filter attributes based on 2 criteria
@@ -39,6 +40,7 @@ class MetadataMixin:
         Does not return callables
     '''
     @type_safe
+    @not_none
     def get_metadata(self) -> dict:
         '''
         Returns a dictionary of {attribute name : value} pairs
