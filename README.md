@@ -1,5 +1,10 @@
 # Update Logs
 
+## Change Log (July 5, 2022)
++ Module [`neural_network.model`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model) has been extended to include two more models
+    + Added `decision_tree.py`, `k_nearest_neighbors.py`, both of which are currently not implemented.
+
+
 ## Change Log (July 4, 2022)
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base) has been added and fully implemented. Authors are welcome to add any other mixins as they please.
     + Removed `decompostion_mixin.py`, `exception_mixin.py`, `fit_mixin.py`, `solver_mixin.py`
@@ -89,6 +94,8 @@
 │    │    ├── recall_score.py
 │    ├── model/
 │    │    ├── __init__.py
+│    │    ├── decision_tree.py
+│    │    ├── k_nearest_neighbors.py
 │    │    ├── sequential.py
 │    ├── model_selection/
 │    │    ├── __init__.py
