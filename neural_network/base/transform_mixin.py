@@ -21,7 +21,7 @@ class TransformMixin:
     @type_safe
     @not_none(nullable=('y', ))
     def fit_transform(self, X: np.ndarray, y: np.ndarray = None, *,
-                      return_self: bool = False,) -> Union[np.ndarray, tuple]:
+                      return_self: bool = False, **kwargs) -> Union[np.ndarray, tuple]:
         '''
         Fits the transformer with inputs, then applies the transformation
 
@@ -36,8 +36,8 @@ class TransformMixin:
             self: The instance of the transformer, only if `return_self` is True
             numpy.ndarray: The transformed data
         '''
-        self.fit(X, y)
+        self.fit(X, y, **kwargs)
         if return_self:
-            return self, self.transform(X)
+            return self, self.transform(X, y, **kwargs)
         else:
-            return self.transform(X)
+            return self.transform(X, y, **kwargs)
