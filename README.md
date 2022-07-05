@@ -50,8 +50,6 @@
 │    │    ├── tanh.py
 │    ├── aux_math/
 │    │    ├── __init__.py
-│    │    ├── mat_dot.py
-│    │    ├── mat_mul.py
 │    │    ├── correlate.py
 │    │    ├── convolve.py
 │    ├── base/
