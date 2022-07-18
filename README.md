@@ -1,5 +1,14 @@
 # Update Logs
 
+## Change Log (July 18, 2022)
++ Created partial dataset
+    + Added, grayscaled and resized **bishop** images
+    + Added, grayscaled and resized **knight** images
+    + Added, grayscaled and resized **pawn** images
+    + Added script [`grayscale.py`](https://github.com/mkpro118/CS-539-project/blob/main/data/grayscale.py)
+    + Added script [`resize.py`](https://github.com/mkpro118/CS-539-project/blob/main/data/resize.py)
++ Dependencies now include Pillow (PIL)
+
 ## Change Log (July 5, 2022)
 + Module [`neural_network.model`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model) has been extended to include two more models
     + Added `decision_tree.py`, `k_nearest_neighbors.py`, both of which are currently not implemented.
