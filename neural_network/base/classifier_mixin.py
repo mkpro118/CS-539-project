@@ -1,7 +1,7 @@
 from typing import Callable, Union
 import numpy as np
 
-from mixin import mixin
+from .mixin import mixin
 
 from ..metrics import (
     accuracy_score,
