@@ -115,8 +115,12 @@ def type_safe(func: Callable = None, /,
                         # in order to use the starred (*) expression
                         annotation = (annotations(req, object),)
 
+                    # Cannot check types if annotations are strings
+                    if any([isinstance(_, str) for _ in annotation]):
+                        continue
+
                     # assert there's no type mismatch
-                    assert isinstance(real, (*annotation, NONE_TYPE))
+                    assert isinstance(real, (*annotation, NONE_TYPE, str))
                 except AssertionError:
                     # store mismatches if any in the `errors` list
                     q = "'"
