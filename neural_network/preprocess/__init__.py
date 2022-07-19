@@ -1,4 +1,3 @@
-# To initiliaze folder as a module
-# To initiliaze folder as a module
-# To initiliaze folder as a module
-# To initiliaze folder as a module
+from .one_hot_encoder import OneHotEncoder
+from .scaler import Scaler
+from .standardizer import Standardizer
