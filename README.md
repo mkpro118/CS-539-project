@@ -9,6 +9,7 @@
     + Added [`scaler.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/scaler.py)
     + Added [`standardizer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/standardizer.py)
 + Minor bug fixes in `neural_network.utils.typesafety.py` and `neural_network.base.classifier_mixin.py`
++ Removed `neural_network.preprocess.imputer.py` as it is unused
 
 ## Change Log (July 18, 2022)
 + Created partial dataset
@@ -123,7 +124,6 @@
 │    │    ├── train_test_split.py
 │    ├── preprocess/
 │    │    ├── __init__.py
-│    │    ├── imputer.py
 │    │    ├── one_hot_encoder.py
 │    │    ├── scaler.py
 │    │    ├── standardizer.py
