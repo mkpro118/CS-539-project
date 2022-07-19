@@ -1,5 +1,15 @@
 # Update Logs
 
+## Change Log (July 19, 2022)
++ Module [`decomposition`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/decomposition) has been fully implemented
+    + Added [`linear_discriminant_analysis.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/decomposition/linear_discriminant_analysis.py)
+    + Added [`principal_component_analysis.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/decomposition/principal_component_analysis.py)
++ Module [`preprocess`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/preprocess) has been fully implemented
+    + Added [`one_hot_encoder.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/one_hot_encoder.py)
+    + Added [`scaler.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/scaler.py)
+    + Added [`standardizer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/standardizer.py)
++ Minor bug fixes in `neural_network.utils.typesafety.py` and `neural_network.base.classifier_mixin.py`
+
 ## Change Log (July 18, 2022)
 + Created partial dataset
     + Added, grayscaled and resized **bishop** images
