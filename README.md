@@ -18,7 +18,6 @@
 + Module [`neural_network.preprocess`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/preprocess)
     + Removed unnecessary variables in [`one_hot_encoder.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/one_hot_encoder.py), [`scaler.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/scaler.py) and [`standardizer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/standardizer.py)
 + Fixed a return type bug in [`neural_network.preprocess.one_hot_encoder.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/one_hot_encoder.py)
-+ Removed un `_check_fitted` method of [`neural_network.base.transform_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/transform_mixin.py)
 + Fixed a bug in the `_check_fitted` method of [`neural_network.base.transform_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/transform_mixin.py)
 
 
