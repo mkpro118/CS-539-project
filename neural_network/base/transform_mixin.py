@@ -16,6 +16,8 @@ class TransformMixin:
     Methods:
         `fit_transform(X: numpy.ndarray, y: numpy.ndarray) -> numpy.ndarray`:
             Fits the transformer and applies the transformation
+        `_check_is_fitted(self) -> None`:
+            Ensures the transformer is fitted
     '''
 
     @type_safe
@@ -41,3 +43,14 @@ class TransformMixin:
             return self, self.transform(X, y, **kwargs)
         else:
             return self.transform(X, y, **kwargs)
+
+    @type_safe
+    @not_none
+    def _check_is_fitted(self):
+        '''
+        Ensure the instance is fitted before transformation
+        '''
+
+        if any(((getattr(self, (_ := attr), None) is None) for attr in self._attrs)):
+            print(_)
+            raise ValueError(f'{self.__class__} object is not yet fitted!')
