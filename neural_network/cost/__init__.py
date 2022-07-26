@@ -1,3 +1,2 @@
-# To initiliaze folder as a module
-# To initiliaze folder as a module
-# To initiliaze folder as a module
+from .cross_entropy import CrossEntropy
+from .mean_squared_error import MeanSquaredError

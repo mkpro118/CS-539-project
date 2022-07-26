@@ -2,46 +2,51 @@ import numpy as np
 from typing import Union
 from numbers import Number
 
-from ..base import CostMixin, MetadataMixin, SaveMixin
+from ..base import (
+    CostMixin,
+    MetadataMixin,
+    SaveMixin,
+)
 
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
 
 
 @export
-class MeanSquaredError(CostMixin, MetadataMixin, SaveMixin):
+class CrossEntropy(CostMixin, MetadataMixin, SaveMixin):
     '''
-    Provides static methods to compute the mean squared error loss
-    and it's derivative.
+    Provides static methods to compute the cost entropy loss
+    and it's derivative corresponding to the softmax function
     '''
     @staticmethod
     @type_safe
     @not_none
     def apply(y_true: np.ndarray, y_pred: np.ndarray) -> Union[Number, np.number]:
         '''
-        Applies the mean squared error loss on the given labels and predictions
+        Applies the cross entropy loss on the given labels and predictions
 
         Parameters:
             y_true: numpy.ndarray of shape (n_samples, n_labels)
-                The known true labels (n_samples, n_labels)
+                The known true labels
             y_pred: numpy.ndarray of shape (n_samples, n_labels)
                 The predicted values
+
         Returns:
             float: average loss over all samples
         '''
-        return np.mean((y_pred - y_true) ** 2)
+        return np.mean(np.sum(-y_true * np.log2(y_pred), axis=1))
 
     @staticmethod
     @type_safe
     @not_none
     def derivative(y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
         '''
-        Applies the derivative of mean squared error loss
-        on the given labels and predictions
+        Applies the derivative of cross entropy loss on the given
+        labels and predictions corresponding to the softmax function
 
         Parameters:
             y_true: numpy.ndarray of shape (n_samples, n_labels)
-                The known true labels (n_samples, n_labels)
+                The known true labels
             y_pred: numpy.ndarray of shape (n_samples, n_labels)
                 The predicted values
 
