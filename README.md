@@ -1,5 +1,31 @@
 # Update Logs
 
+## Change Log (July 26, 2022)
++ Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
+    + Renamed required methods in class CostMixin ([`cost_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/cost_mixin.py)) from `cost` to `apply`, and `cost_derivative` to `derivative`
++ Module [`neural_network.cost`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/cost) has been fully implemented (with docs)
+    + Added [`cross_entropy.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/cost/cross_entropy.py)
+    + Added [`mean_squared_error.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/cost/mean_squared_error.py)
++ Module [`neural_network.model_selection`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model_selection) has been fully implemented (with docs)
+    + Added [`kfold.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model_selection/kfold.py)
+    + Added [`repeated_kfold.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model_selection/repeated_kfold.py)
+    + Added [`stratified_kfold.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model_selection/stratified_kfold.py)
+    + Added [`stratified_repeated_kfold.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model_selection/stratified_repeated_kfold.py)
+    + Added [`train_test_split.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model_selection/train_test_split.py)
++ Module [`neural_network.decomposition`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/decomposition)
+    + Added docs to [`linear_discriminant_analysis.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/decomposition/linear_discriminant_analysis.py)
+    + Added docs to [`principal_component_analysis.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/decomposition/principal_component_analysis.py)
++ Module [`neural_network.preprocess`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/preprocess)
+    + Removed unnecessary variables in [`one_hot_encoder.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/one_hot_encoder.py), [`scaler.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/scaler.py) and [`standardizer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/standardizer.py)
++ Fixed a return type bug in [`neural_network.preprocess.one_hot_encoder.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/one_hot_encoder.py)
++ Removed un `_check_fitted` method of [`neural_network.base.transform_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/transform_mixin.py)
++ Fixed a bug in the `_check_fitted` method of [`neural_network.base.transform_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/transform_mixin.py)
+
+
+## Change Log (July 20, 2022)
++ Renamed `neural_network.cost.categorical_cross_entropy.py` to [`neural_network.cost.cross_entropy.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/cost/cross_entropy.py)
++ Removed `neural_network.cost.ln_norm_distance.py` as it is unused
+
 ## Change Log (July 19, 2022)
 + Module [`decomposition`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/decomposition) has been fully implemented
     + Added [`linear_discriminant_analysis.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/decomposition/linear_discriminant_analysis.py)
@@ -85,8 +111,7 @@
 │    │    ├── transform_mixin.py
 │    ├── cost/
 │    │    ├── __init__.py
-│    │    ├── categorical_cross_entropy.py
-│    │    ├── ln_norm_error.py
+│    │    ├── cross_entropy.py
 │    │    ├── mean_squared_error.py
 │    ├── decomposition/
 │    │    ├── __init__.py
