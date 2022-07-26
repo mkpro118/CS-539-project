@@ -11,12 +11,12 @@ class CostMixin(LayerMixin):
     layer
 
     Requires all derived class to define at least 2 methods,
-    `cost` and `cost_derivative`, which contain the logic and
+    `apply` and `derivative`, which contain the logic and
     mathematical operations for the cost function
 
-    Both `cost` and `cost_derivative` must take in exactly 1 positional
-    argument. It is guaranteed that the arguments passed into both `cost`
-    and `cost_derivative` is of type numpy.ndarray
+    Both `apply` and `derivative` must take in exactly 1 positional
+    argument. It is guaranteed that the arguments passed into both `apply`
+    and `derivative` is of type numpy.ndarray
 
     Inherited from LayerMixin
         `get_metadata`
