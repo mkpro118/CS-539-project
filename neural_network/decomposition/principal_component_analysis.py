@@ -6,19 +6,38 @@ from ..utils.exports import export
 
 @export
 class PrincipalComponentAnalysis(MetadataMixin, SaveMixin, TransformMixin):
+    '''
+    Used to reduce feature dimension by performing Principal Component Analysis
+    '''
 
     @type_safe
     def __init__(self, n_components: int = None, *, solver: str = 'svd'):
+        '''
+        Initalize the PCA instance
+
+        Parameters:
+            n_components: int, default = None
+                Number of components in the reduced dimension matrix
+            solver: str, default = 'svd'
+                Solver method to use, can be 'svd' or 'eigen'
+        '''
         self.n_components = n_components
         self.solver = solver
-        if self.solver == 'eigen':
-            self._solver_fn = self._eigen_solver
-        else:
-            self._solver_fn = self._svd_solver
+        self._solver_fn = self._eigen_solver if self.solver == 'eigen' else self._svd_solver
 
     @type_safe(skip=('return',))
     @not_none(nullable=('y',))
     def fit(self, X: np.ndarray, y: np.ndarray = None, /, **kwargs) -> 'PrincipalComponentAnalysis':
+        '''
+        Fits the PCA instance with the given features and labels
+
+        Parameters:
+            X: np.ndarray of shape (n_samples, n_features)
+                The feature matrix to use for PCA
+
+        Returns:
+            self: a fitted PCA instance
+        '''
         self.X = X
 
         if X.ndim != 2:
@@ -48,6 +67,14 @@ class PrincipalComponentAnalysis(MetadataMixin, SaveMixin, TransformMixin):
         self.projection_matrix = self.right_singular_vectors @ self.right_singular_vectors.T
         self.projection_matrix = self.projection_matrix.real
 
+        self._attrs = (
+            'X', 'n_samples', 'n_features',
+            'right_singular_vectors', 'projection_matrix',
+        )
+        if self.solver == 'svd':
+            self._attrs += ('U', 'S', 'Vh')
+        elif self.solver == 'eigen':
+            self._attrs += ('eig_vals', 'eig_vecs')
         return self
 
     def _svd_solver(self) -> None:
@@ -69,23 +96,20 @@ class PrincipalComponentAnalysis(MetadataMixin, SaveMixin, TransformMixin):
         # Right Singular Vectors contain eig_vecs[first `n_components` columns]
         self.right_singular_vectors = self.eig_vecs[:, : self.n_components]
 
-    def _check_is_fitted(self) -> None:
-        _attrs = (
-            'X', 'n_samples', 'n_features',
-            'right_singular_vectors', 'projection_matrix',
-        )
-        if self.solver == 'svd':
-            _attrs += ('U', 'S', 'Vh')
-        elif self.solver == 'eigen':
-            _attrs += ('eig_vals', 'eig_vecs')
-
-        if any(((getattr(self, attr, None) is None) for attr in _attrs)):
-            raise ValueError('PrincipalComponentAnalysis object is not yet fitted!')
-
     @type_safe(skip=('y',))
     @not_none(nullable=('y',))
     def transform(self, X: np.ndarray, y: np.ndarray = None, /,
                   **kwargs) -> np.ndarray:
+        '''
+        Reduces the feature dimensions of a given matrix to the
+        number of components specified in the PCsA instance
+
+        Parameters:
+            X: np.ndarray of shape (m, n)
+                The matrix to transform
+        Returns:
+            numpy.ndarray: The transformed matrix
+        '''
         # Ensure the instance is fitted before transforming
         self._check_is_fitted()
         return X @ self.right_singular_vectors

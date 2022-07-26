@@ -6,19 +6,40 @@ from ..utils.exports import export
 
 @export
 class LinearDiscriminantAnalysis(TransformMixin, MetadataMixin, SaveMixin):
+    '''
+    Used to reduce feature dimension by performing Linear Discriminant Analysis
+    '''
 
     @type_safe
     def __init__(self, n_components: int = None, *, solver: str = 'svd'):
+        '''
+        Initalize the LDA instance
+
+        Parameters:
+            n_components: int, default = None
+                Number of components in the reduced dimension matrix
+            solver: str, default = 'svd'
+                Solver method to use, can be 'svd' or 'eigen'
+        '''
         self.n_components = n_components
         self.solver = solver
-        if self.solver == 'eigen':
-            self._solver_fn = self._eigen_solver
-        else:
-            self._solver_fn = self._svd_solver
+        self._solver_fn = self._eigen_solver if self.solver == 'eigen' else self._svd_solver
 
     @type_safe(skip=('return', ))
     @not_none
     def fit(self, X: np.ndarray, y: np.ndarray, **kwargs) -> 'LinearDiscriminantAnalysis':
+        '''
+        Fits the LDA instance with the given features and labels
+
+        Parameters:
+            X: np.ndarray of shape (n_samples, n_features)
+                The feature matrix to use for LDA
+            y: np.ndarray of shape (n_samples, 1)
+                The label vector to perform LDA with
+
+        Returns:
+            self: a fitted LDA instance
+        '''
         self.X = X
         self.y = y
 
@@ -66,6 +87,16 @@ class LinearDiscriminantAnalysis(TransformMixin, MetadataMixin, SaveMixin):
 
         # Ignore complex parts if they show up.
         self.linear_discriminants = self.linear_discriminants.real
+
+        self._attrs = (
+            'X', 'y', 'n_samples', 'n_features', 'labels',
+            'n_labels', 'feature_means', 'Sw', 'Sb', 'Sw_inv_Sb',
+            'linear_discriminants',
+        )
+        if self.solver == 'svd':
+            self._attrs += ('U', 'S', 'Vh')
+        elif self.solver == 'eigen':
+            self._attrs += ('eig_vals', 'eig_vecs')
         return self
 
     def _svd_solver(self) -> None:
@@ -83,23 +114,19 @@ class LinearDiscriminantAnalysis(TransformMixin, MetadataMixin, SaveMixin):
         self.eig_vecs = eig_vecs[:, sorted_indices]
         self.linear_discriminants = -self.eig_vecs[:, : self.n_components]
 
-    def _check_is_fitted(self):
-        _attrs = (
-            'X', 'y', 'n_samples', 'n_features', 'labels',
-            'n_labels', 'feature_means', 'Sw', 'Sb', 'Sw_inv_Sb',
-            'linear_discriminants',
-        )
-        if self.solver == 'svd':
-            _attrs += ('U', 'S', 'Vh')
-        elif self.solver == 'eigen':
-            _attrs += ('eig_vals', 'eig_vecs')
-
-        if any(((getattr(self, attr, None) is None) for attr in _attrs)):
-            raise ValueError('LinearDiscriminantAnalysis object is not yet fitted!')
-
     @type_safe
     @not_none
     def transform(self, X: np.ndarray, y: np.ndarray = None, /, **kwargs):
+        '''
+        Reduces the feature dimensions of a given matrix to the
+        number of components specified in the LDA instance
+
+        Parameters:
+            X: np.ndarray of shape (m, n)
+                The matrix to transform
+        Returns:
+            numpy.ndarray: The transformed matrix
+        '''
         self._check_is_fitted()
         _X = np.zeros(shape=(X.shape[0], self.n_components))
         for i in range(_X.shape[0]):
