@@ -51,6 +51,5 @@ class TransformMixin:
         Ensure the instance is fitted before transformation
         '''
 
-        if any(((getattr(self, (_ := attr), None) is None) for attr in self._attrs)):
-            print(_)
+        if any(((getattr(self, attr, None) is None) for attr in self._attrs)):
             raise ValueError(f'{self.__class__} object is not yet fitted!')
