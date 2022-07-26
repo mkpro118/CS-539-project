@@ -25,21 +25,21 @@ class CostMixin(LayerMixin):
     def __init__(self):
         errors = []
 
-        # Ensure that the subclass defines method `cost`
-        cost_fn = getattr(self, 'cost', None)
+        # Ensure that the subclass defines method `apply`
+        cost_fn = getattr(self, 'apply', None)
         if not callable(cost_fn):
             errors.append(
                 f'{self.__class__} must explicitly define the '
-                f'`cost(input_: np.ndarray) -> np.ndarray` '
+                f'`apply(input_: np.ndarray) -> np.ndarray` '
                 f'function to specify the cost function'
             )
 
-        # Ensure that the subclass defines method `cost_derivative`
-        derivative_fn = getattr(self, 'cost_derivative', None)
+        # Ensure that the subclass defines method `derivative`
+        derivative_fn = getattr(self, 'derivative', None)
         if not callable(derivative_fn):
             errors.append(
                 f'{self.__class__} must explicitly define the '
-                f'`cost_derivative(input_: np.ndarray) -> np.ndarray` '
+                f'`derivative(input_: np.ndarray) -> np.ndarray` '
                 f'function to specify the derivative of the cost function'
             )
 
