@@ -16,7 +16,7 @@ def overallPrecision(cmat):
     tp = np.trace(cmat)
     sumCols = 0
 
-    # get fp values for each label
+    # get tp+fp values for each label
     for i in range (cols):
         for j in range (rows):
             if (j >= i):
