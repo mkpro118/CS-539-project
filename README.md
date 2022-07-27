@@ -2,9 +2,9 @@
 
 ## Change Log (July 27, 2022)
 + Module [`neural_network.aux_math`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/aux_math)
-    + Added [`convolve.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/aux_math/convolve.py#L81) with docs, containing two methods
-        + `convolve.py`
-        + `convolve_transpose.py`
+    + Added [`convolve.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/aux_math/convolve.py) with docs, containing two methods
+        + [`convolve`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/aux_math/convolve.py#L86)
+        + [`convolve_transpose`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/aux_math/convolve.py#L175)
     + Might add support for channels in convolution later
 
 ## Change Log (July 26, 2022)
