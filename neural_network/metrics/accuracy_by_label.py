@@ -11,7 +11,7 @@ class labelAccuracy:
             cmat: confusion matrix (2d array: n_labels, n_labels)
 
         Returns: 
-            float array: each element of the array has an accuracy between
+            1d float array: each element of the array has an accuracy between
             0 and 1, corresponding with it's label position in the confusion
             matrix 
         '''
