@@ -9,7 +9,6 @@ from ..metrics import (
     average_precision_score,
     average_recall_score,
     confusion_matrix,
-    correct_classification_rate,
     precision_score,
     recall_score,
 )
@@ -25,7 +24,6 @@ NAME_TO_SYMBOL_MAP = {
     'average_precision_score': average_precision_score,
     'average_recall_score': average_recall_score,
     'confusion_matrix': confusion_matrix,
-    'correct_classification_rate': correct_classification_rate,
     'precision_score': precision_score,
     'recall_score': recall_score,
 }
