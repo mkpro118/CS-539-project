@@ -7,7 +7,7 @@ from ..utils.typesafety import type_safe, not_none
 
 
 @mixin  # Prevents instantiation
-class ActivationMixin(LayerMixin):
+class ActivationMixin:
     '''
     Mixin Class for all Activation Layers
 
@@ -21,9 +21,6 @@ class ActivationMixin(LayerMixin):
     Both `apply` and `derivative` must take in exactly 1
     postional argument. It is guaranteed that the arguments passed into both
     `apply` and `derivative` is of type numpy.ndarray
-
-    Inherited from LayerMixin
-        `get_metadata`
     '''
 
     def __init__(self):
