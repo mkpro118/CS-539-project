@@ -10,7 +10,7 @@
 + Module [`neural_network.aux_math`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/aux_math)
     + Added support for 3D and 4D convolutions in [`convolve.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/aux_math/convolve.py)
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
-    + Refactored [`activation_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/activation_mixin.py); Removed LayerMixin, renamed methods to be simiar to  [`CostMixin`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/cost_mixin.py#L6)
+    + Refactored [`activation_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/activation_mixin.py); Removed LayerMixin, renamed methods to be simiar to  [`CostMixin`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/cost_mixin.py#L5)
     + Removed imports for `correct_classification_rate`, since that is exactly what [`accuracy_score`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/accuracy_score.py) does
     + Refactored [`cost_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/cost_mixin.py); Removed LayerMixin
 + Module [`neural_network.exceptions`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/exceptions) has been fully implemented (with docs)
