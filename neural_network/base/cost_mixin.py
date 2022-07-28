@@ -1,9 +1,8 @@
 from .mixin import mixin
-from .layer_mixin import LayerMixin
 
 
 @mixin  # Prevents instantiation
-class CostMixin(LayerMixin):
+class CostMixin:
     '''
     Mixin Class for all Cost Layers
 
@@ -17,9 +16,6 @@ class CostMixin(LayerMixin):
     Both `apply` and `derivative` must take in exactly 1 positional
     argument. It is guaranteed that the arguments passed into both `apply`
     and `derivative` is of type numpy.ndarray
-
-    Inherited from LayerMixin
-        `get_metadata`
     '''
 
     def __init__(self):
