@@ -1,18 +1,18 @@
-# To be implemented
 import numpy as np
 from sklearn import metrics
 
-def overallAccuracy(cmat, K):
+
+def accuracy_score(cmat, K):
     '''
     Calculates overall accuracy of the model
 
-    Parameters: 
+    Parameters:
         cmat: confusion matrix (n_labels, n_labels)
         K: total amount of samples
-    
-    Returns: 
+
+    Returns:
         float: 0 <= accuracy of the model <= 1
     '''
-    accuracy = float(np.trace(cmat)/(K))
+    accuracy = float(np.trace(cmat) / (K))
 
     return accuracy
