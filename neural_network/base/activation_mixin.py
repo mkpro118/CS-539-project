@@ -1,4 +1,5 @@
 import numpy as np
+from functools import wraps
 
 from .mixin import mixin
 from .layer_mixin import LayerMixin
@@ -14,20 +15,12 @@ class ActivationMixin(LayerMixin):
     layer
 
     Requires all derived class to define at least 2 methods,
-    `activation` and `activation_derivative`, which contain the logic and
+    `apply` and `derivative`, which contain the logic and
     mathematical operations for the activation function
 
-    Both `activation` and `activation_derivative` must take in exactly 1
+    Both `apply` and `derivative` must take in exactly 1
     postional argument. It is guaranteed that the arguments passed into both
-    `activation` and `activation_derivative` is of type numpy.ndarray
-
-    Methods:
-        `backward(input_: numpy.ndarray) -> numpy.ndarray`:
-            Performs backward propagation, using `activation_derivative`
-
-        `forward(input_: numpy.ndarray) -> numpy.ndarray`:
-            Performs forward propagation, using `activation`
-
+    `apply` and `derivative` is of type numpy.ndarray
 
     Inherited from LayerMixin
         `get_metadata`
@@ -35,26 +28,26 @@ class ActivationMixin(LayerMixin):
 
     def __init__(self):
         '''
-        Ensure that `activation` and `activation_derivative` exist
+        Ensure that `apply` and `derivative` exist
         '''
         # To display all errors at once
         errors = []
 
-        # Ensure that the subclass defines method `activation`
-        activation_fn = getattr(self, 'activation', None)
+        # Ensure that the subclass defines method `apply`
+        activation_fn = getattr(self, 'apply', None)
         if not callable(activation_fn):
             errors.append(
                 f'{self.__class__} must explicitly define the '
-                f'`activation(input_: np.ndarray) -> np.ndarray` '
+                f'`apply(input_: np.ndarray) -> np.ndarray` '
                 f'function to specify the activation function'
             )
 
-        # Ensure that the subclass defines method `activation_derivative`
-        derivative_fn = getattr(self, 'activation_derivative', None)
+        # Ensure that the subclass defines method `derivative`
+        derivative_fn = getattr(self, 'derivative', None)
         if not callable(derivative_fn):
             errors.append(
                 f'{self.__class__} must explicitly define the '
-                f'`activation_derivative(input_: np.ndarray) -> np.ndarray` '
+                f'`derivative(input_: np.ndarray) -> np.ndarray` '
                 f'function to specify the derivative of the activation function'
             )
 
@@ -79,35 +72,3 @@ class ActivationMixin(LayerMixin):
         Format: '<ClassName> | Activation Layer'
         '''
         return str(self)
-
-    @type_safe
-    @not_none
-    def backward(self, input_: np.ndarray) -> np.ndarray:
-        '''
-        To perform backward propagation, using `activation_derivative`
-
-        Parameters:
-            input_: numpy.ndarray of shape (n_samples, n_features)
-                The input to this layer to update paramters and perform gradient
-                descent
-
-        Returns:
-            numpy.ndarray: Product of the input and this layer's activation
-            function derivative
-        '''
-        return input_ * self.activation_derivative(input_)
-
-    @type_safe
-    @not_none
-    def forward(self, input_: np.ndarray) -> np.ndarray:
-        '''
-        To perform forward propagation, using `activation`
-
-        Parameters:
-            input_: numpy.ndarray of shape (n_samples, n_features)
-                The input to this layer to be activated
-
-        Returns:
-            numpy.ndarray: Activated input
-        '''
-        return self.activation(input_)
