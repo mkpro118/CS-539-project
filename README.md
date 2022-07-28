@@ -23,7 +23,7 @@
     + Added [`precision_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/precision_score.py)
     + Added [`recall_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/recall_score.py)
 + Module [`neural_network.utils`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/utils)
-    + Removed try-except during imports in [`exceptions_handling.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/exceptions_handling.py)
+    + Removed try-except during imports in [`exception_handling.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/exception_handling.py)
 + All Modules
     + Refactored `__init__.py` to have module docstrings
 
