@@ -1,5 +1,32 @@
 # Update Logs
 
+## Change Log (July 28, 2022)
++ Module [`neural_network.activation`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/activation) has been fully implemented (with docs)
+    + Added [`leaky_relu.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/activation/leaky_relu.py)
+    + Added [`relu.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/activation/relu.py)
+    + Added [`sigmoid.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/activation/sigmoid.py)
+    + Added [`softmax.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/activation/softmax.py)
+    + Added [`tanh.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/activation/tanh.py)
++ Module [`neural_network.aux_math`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/aux_math)
+    + Added support for 3D and 4D convolutions in [`convolve.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/aux_math/convolve.py)
++ Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
+    + Refactored [`activation_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/activation_mixin.py); Removed LayerMixin, renamed methods to be simiar to  [`CostMixin`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/cost_mixin.py#L6)
+    + Removed imports for `correct_classification_rate`, since that is exactly what [`accuracy_score`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/accuracy_score.py) does
++ Module [`neural_network.exceptions`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/exceptions) has been fully implemented (with docs)
+    + Added [`exception_factory.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/exceptions/exception_factory.py)
++ Module [`neural_network.metrics`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/metrics) has been implemented, needs refactoring and documentation
+    + Added [`accuracy_by_label.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/accuracy_by_label.py)
+    + Added [`accuracy_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/accuracy_score.py)
+    + Added [`average_precision_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/average_precision_score.py)
+    + Added [`average_recall_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/average_recall_score.py)
+    + Added [`confusion_matrix.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/confusion_matrix.py)
+    + Added [`precision_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/precision_score.py)
+    + Added [`recall_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/recall_score.py)
++ Module [`neural_network.utils`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/utils)
+    + Removed try-except during imports in [`exceptions_handling.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/exceptions_handling.py)
++ All Modules
+    + Refactored `__init__.py` to have module docstrings
+
 ## Change Log (July 27, 2022)
 + Module [`neural_network.aux_math`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/aux_math)
     + Added [`convolve.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/aux_math/convolve.py) with docs, containing two methods
@@ -138,7 +165,6 @@
 │    │    ├── average_precision_score.py
 │    │    ├── average_recall_score.py
 │    │    ├── confusion_matrix.py
-│    │    ├── correct_classification_rate.py
 │    │    ├── precision_score.py
 │    │    ├── recall_score.py
 │    ├── model/
