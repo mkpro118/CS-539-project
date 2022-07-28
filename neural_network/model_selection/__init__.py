@@ -1,3 +1,5 @@
+'''Allow classes to be accesed from package level imports'''
+
 from .kfold import KFold
 from .stratified_kfold import StratifiedKFold
 from .repeated_kfold import RepeatedKFold

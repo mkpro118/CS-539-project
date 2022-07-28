@@ -1,1 +1,1 @@
-# To initiliaze folder as a module
+'''Allow classes to be accesed from package level imports'''
