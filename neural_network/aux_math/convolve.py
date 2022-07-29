@@ -4,7 +4,7 @@ from typing import Union, Iterable
 import pickle
 import numpy as np
 
-from ..exceptions.exception_factory import ExceptionFactory
+from ..exceptions import ExceptionFactory
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
 from ..utils.exception_handling import safeguard
