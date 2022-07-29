@@ -1,5 +1,12 @@
 # Update Logs
 
+## Change Log (July 29, 2022)
++ Module [`neural_network.metrics`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/metrics)
+    + Refactored [`accuracy_by_label.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/accuracy_by_label.py)
+
++ Module [`neural_network.aux_math`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/aux_math)
+    + Refactored [`convolve.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/aux_math/convolve.py)
+
 ## Change Log (July 28, 2022)
 + Module [`neural_network.activation`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/activation) has been fully implemented (with docs)
     + Added [`leaky_relu.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/activation/leaky_relu.py)
