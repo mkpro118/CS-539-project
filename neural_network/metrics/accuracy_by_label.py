@@ -17,10 +17,15 @@ def accuracy_by_label(y_true: np.ndarray, y_pred: np.ndarray, *, normalize: bool
             known one hot encoded labels
         y_pred: np.ndarray of shape (n_samples, n_classes)
             predicted one hot encoded labels
+        normalize: bool, keyword only, default = True
+            Scores are a float between 0. and 1. by default
+            If set to False, scores will be the number of
+            correct classifications under that label
 
     Returns:
         np.ndarray: each element of the array is the normalized accuracy of that label
-                    if normalize is false, it's the number of correct classifications under that label
+                    if normalize is false, it's the number of
+                    correct classifications under that label
     '''
     return (
         (
