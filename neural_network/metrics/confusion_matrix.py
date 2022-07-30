@@ -67,8 +67,14 @@ def confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, *,
         )
 
     if y_true.ndim == 1:
+        if len(y_true) == 1:
+            raise errors['ConfusionMatrixError'](
+                f'There must be at least 2 labels to construct a confusion matrix'
+            )
         cmat = _cmat1d(y_true, y_pred)
     elif y_true.ndim == 2:
+        if y_true.shape[-1] == 1:
+            return confusion_matrix(y_true.flatten(), y_pred.flatten(), normalize=normalize)
         cmat = _cmat2d(y_true, y_pred)
     else:
         raise errors['ConfusionMatrixError'](
