@@ -12,7 +12,7 @@ errors = {
 
 
 @type_safe
-@not_none
+@not_none(nullable=('normalize',))
 @export
 def accuracy_by_label(y_true: np.ndarray, y_pred: np.ndarray, *,
                       normalize: bool = True) -> np.ndarray:

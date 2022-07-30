@@ -31,7 +31,7 @@ def _cmat2d(y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
 
 
 @type_safe
-@not_none
+@not_none(nullable=('normalize',))
 @export
 def confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, *,
                      normalize: str = None) -> np.ndarray:
