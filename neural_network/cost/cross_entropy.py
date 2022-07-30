@@ -2,11 +2,10 @@ import numpy as np
 from typing import Union
 from numbers import Number
 
-from ..base import (
-    CostMixin,
-    MetadataMixin,
-    SaveMixin,
-)
+from ..base.cost_mixin import CostMixin
+from ..base.metadata_mixin import MetadataMixin
+from ..base.save_mixin import SaveMixin
+
 
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export

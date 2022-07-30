@@ -1,6 +1,7 @@
 import numpy as np
 
-from ..base import MetadataMixin, SaveMixin
+from ..base.metadata_mixin import MetadataMixin
+from ..base.save_mixin import SaveMixin
 
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export

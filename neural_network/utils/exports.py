@@ -1,9 +1,6 @@
 import sys
 from typing import Callable, Type, Union
-try:
-    from typesafety import type_safe
-except ImportError:
-    from .typesafety import type_safe
+from .typesafety import type_safe
 
 # exports isn't defined yet, so we have to do this manually
 # __all__ = ['export', ]

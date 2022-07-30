@@ -2,7 +2,7 @@ import numpy as np
 
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
-from ..base import ActivationMixin
+from ..base.activation_mixin import ActivationMixin
 from .leaky_relu import LeakyReLU
 
 
