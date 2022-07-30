@@ -1,5 +1,14 @@
 # Update Logs
 
+## Change Log (July 30, 2022)
++ Module [`neural_network.metrics`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/metrics)
+    + Refactored [`accuracy_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/accuracy_score.py)
+    + Refactored [`confusion_matrix.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/confusion_matrix.py)
+    + Removed file [`average_precision_score.py`] since it's redundant given [`precision_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/precision_score.py)
+    + Removed file [`average_recall_score.py`] since it's redundant given [`recall_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/recall_score.py)
++ Refactored all [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base) dependent modules to avoid circular imports
+
+
 ## Change Log (July 29, 2022)
 + Module [`neural_network.metrics`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/metrics)
     + Refactored [`accuracy_by_label.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/accuracy_by_label.py)
@@ -170,8 +179,6 @@
 │    │    ├── __init__.py
 │    │    ├── accuracy.py
 │    │    ├── accuracy_by_label.py
-│    │    ├── average_precision_score.py
-│    │    ├── average_recall_score.py
 │    │    ├── confusion_matrix.py
 │    │    ├── precision_score.py
 │    │    ├── recall_score.py
