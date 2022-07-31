@@ -15,8 +15,13 @@ _precision = lambda tp, fp: tp / (tp + fp)
 
 @type_safe
 @not_none
-def _score_binary_label(y_true: np.ndarray, y_pred: np.ndarray) -> float:
-    cmat = confusion_matrix(y_true, y_pred)
+def _score_binary_label(y_true: np.ndarray, y_pred: np.ndarray, *,
+                        use_multiprocessing: bool = False) -> float:
+    cmat = confusion_matrix(
+        y_true,
+        y_pred,
+        use_multiprocessing=use_multiprocessing
+    )
 
     if cmat.shape[-1] != 2:
         raise errors['PrecisionScoreError'](
@@ -30,8 +35,13 @@ def _score_binary_label(y_true: np.ndarray, y_pred: np.ndarray) -> float:
 
 @type_safe
 @not_none
-def _score_multi_label_micro(y_true: np.ndarray, y_pred: np.ndarray) -> float:
-    mcm = multilabel_confusion_matrix(y_true, y_pred)
+def _score_multi_label_micro(y_true: np.ndarray, y_pred: np.ndarray, *,
+                             use_multiprocessing: bool = False) -> float:
+    mcm = multilabel_confusion_matrix(
+        y_true,
+        y_pred,
+        use_multiprocessing=use_multiprocessing
+    )
 
     tp = np.sum(mcm[:, 0, 0])
     fp = np.sum(mcm[:, 1, 0])
@@ -41,8 +51,13 @@ def _score_multi_label_micro(y_true: np.ndarray, y_pred: np.ndarray) -> float:
 
 @type_safe
 @not_none
-def _score_multi_label_macro(y_true: np.ndarray, y_pred: np.ndarray) -> float:
-    mcm = multilabel_confusion_matrix(y_true, y_pred)
+def _score_multi_label_macro(y_true: np.ndarray, y_pred: np.ndarray, *,
+                             use_multiprocessing: bool = False) -> float:
+    mcm = multilabel_confusion_matrix(
+        y_true,
+        y_pred,
+        use_multiprocessing=use_multiprocessing
+    )
 
     tp = mcm[:, 0, 0]
     fp = mcm[:, 1, 0]
