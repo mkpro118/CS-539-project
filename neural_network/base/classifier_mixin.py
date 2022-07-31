@@ -6,8 +6,6 @@ from .mixin import mixin
 from ..metrics import (
     accuracy_score,
     accuracy_by_label,
-    average_precision_score,
-    average_recall_score,
     confusion_matrix,
     precision_score,
     recall_score,
@@ -21,8 +19,6 @@ DEFAULT_METRIC = 'accuracy_score'
 NAME_TO_SYMBOL_MAP = {
     'accuracy_score': accuracy_score,
     'accuracy_by_label': accuracy_by_label,
-    'average_precision_score': average_precision_score,
-    'average_recall_score': average_recall_score,
     'confusion_matrix': confusion_matrix,
     'precision_score': precision_score,
     'recall_score': recall_score,

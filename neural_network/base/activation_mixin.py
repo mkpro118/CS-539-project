@@ -1,4 +1,3 @@
-import numpy as np
 from .mixin import mixin
 
 
