@@ -1,9 +1,5 @@
 import numpy as np
-from functools import wraps
-
 from .mixin import mixin
-from .layer_mixin import LayerMixin
-from ..utils.typesafety import type_safe, not_none
 
 
 @mixin  # Prevents instantiation
