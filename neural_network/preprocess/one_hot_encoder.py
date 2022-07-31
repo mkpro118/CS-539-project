@@ -10,8 +10,6 @@ from ..utils.exports import export
 
 errors = {
     'OneHotEncoderError': ExceptionFactory.register('OneHotEncoderError'),
-    'UniqueLabelError': ExceptionFactory.register('UniqueLabelError'),
-    'UnkownLabelError': ExceptionFactory.register('UnkownLabelError'),
 }
 
 
@@ -79,4 +77,12 @@ class OneHotEncoder(MetadataMixin, SaveMixin, TransformMixin):
                 f'labels array must be 1 dimensional'
             )
 
-        return np.unique(labels)
+        labels = np.unique(labels)
+
+        if not labels.shape[-1] > 1:
+            raise errors['OneHotEncoderError'](
+                f'There must be at least 2 labels to one hot encode, '
+                f'found {labels.shape[-1]}'
+            )
+
+        return labels
