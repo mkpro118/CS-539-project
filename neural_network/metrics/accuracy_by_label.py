@@ -15,7 +15,7 @@ errors = {
 @not_none(nullable=('normalize',))
 @export
 def accuracy_by_label(y_true: np.ndarray, y_pred: np.ndarray, *,
-                      normalize: bool = True) -> np.ndarray:
+                      normalize: bool = True, use_multiprocessing: bool = False) -> np.ndarray:
     '''
     Calculates accuracy of the model by label
 
@@ -28,6 +28,9 @@ def accuracy_by_label(y_true: np.ndarray, y_pred: np.ndarray, *,
             Scores are a float between 0. and 1. by default
             If set to False, scores will be the number of
             correct classifications under that label
+        use_multiprocessing: bool, default = False
+            Set to true to use multiprocessing to speed up computation.
+            Useful for large amounts of data
 
     Returns:
         np.ndarray: each element of the array is the normalized accuracy of that label
@@ -42,7 +45,7 @@ def accuracy_by_label(y_true: np.ndarray, y_pred: np.ndarray, *,
     return (
         (
             correct := np.diagonal(
-                (cmat := confusion_matrix(y_true, y_pred))
+                (cmat := confusion_matrix(y_true, y_pred, use_multiprocessing=use_multiprocessing))
             )
         ) / np.sum(cmat, axis=0)
     ) if normalize else correct

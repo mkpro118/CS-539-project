@@ -16,7 +16,7 @@ errors = {
 @not_none(nullable=('normalize',))
 @export
 def accuracy_score(y_true: np.ndarray, y_pred: np.ndarray, *,
-                   normalize: bool = True) -> Union[float, int]:
+                   normalize: bool = True, use_multiprocessing: bool = False) -> Union[float, int]:
     '''
     Calculates overall accuracy
 
@@ -29,6 +29,9 @@ def accuracy_score(y_true: np.ndarray, y_pred: np.ndarray, *,
             By default score is a float between 0. and 1.
             If normalize is set to False, scores will be the
             number of correct classifications
+        use_multiprocessing: bool, default = False
+            Set to true to use multiprocessing to speed up computation.
+            Useful for large amounts of data
 
     Returns:
         Union[float, int]: The accuracy score
@@ -39,7 +42,7 @@ def accuracy_score(y_true: np.ndarray, y_pred: np.ndarray, *,
             f'{y_true.shape} != {y_pred.shape}'
         )
 
-    cmat = confusion_matrix(y_true, y_pred)
+    cmat = confusion_matrix(y_true, y_pred, use_multiprocessing=use_multiprocessing)
 
     correct = int(np.trace(cmat))
 
