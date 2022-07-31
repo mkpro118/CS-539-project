@@ -1,4 +1,6 @@
 import numpy as np
+from numbers import Integral, Real
+from typing import Union
 
 from ..base.metadata_mixin import MetadataMixin
 from ..base.save_mixin import SaveMixin
@@ -13,12 +15,13 @@ class Scaler(MetadataMixin, SaveMixin, TransformMixin):
     Used to scale the features to a given range
     '''
 
-    def __init__(self, start: float = -1., end: float = 1.):
+    def __init__(self, start: Union[np.floating, np.integer, float, Real, int, Integral] = -1.,
+                 end: Union[np.floating, np.integer, float, Real, int, Integral] = 1.):
         '''
         Parameters:
-            start: float, default = -1.
+            start: Union[np.floating, np.integer, float, Real, int, Integral], default = -1.
                 The lower bound for the scaled features
-            end: float, default = 1.
+            end: Union[np.floating, np.integer, float, Real, int, Integral], default = 1.
                 THe upper bound for the scaled features
         '''
         self.start = start
@@ -66,6 +69,7 @@ class Scaler(MetadataMixin, SaveMixin, TransformMixin):
         Returns:
             numpy.ndarray: The scaled features
         '''
+        self._check_is_fitted()
 
         # Copy the array if transformation is not inplace
         if not inplace:
