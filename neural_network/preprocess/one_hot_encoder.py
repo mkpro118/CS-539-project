@@ -1,10 +1,18 @@
 import numpy as np
+from typing import Union
 
 from ..base.metadata_mixin import MetadataMixin
 from ..base.save_mixin import SaveMixin
 from ..base.transform_mixin import TransformMixin
+from ..exceptions import ExceptionFactory
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
+
+errors = {
+    'OneHotEncoderError': ExceptionFactory.register('OneHotEncoderError'),
+    'UniqueLabelError': ExceptionFactory.register('UniqueLabelError'),
+    'UnkownLabelError': ExceptionFactory.register('UnkownLabelError'),
+}
 
 
 @export
@@ -24,7 +32,7 @@ class OneHotEncoder(MetadataMixin, SaveMixin, TransformMixin):
 
     @type_safe(skip=('y',))
     @not_none(nullable=('y',))
-    def fit(self, X: np.ndarray, y: np.ndarray = None, **kwargs) -> 'OneHotEncoder':
+    def fit(self, X: Union[np.ndarray, list, tuple], y: np.ndarray = None, **kwargs) -> 'OneHotEncoder':
         '''
         Fits the encoder with the unique label values
 
@@ -35,7 +43,7 @@ class OneHotEncoder(MetadataMixin, SaveMixin, TransformMixin):
         Returns:
             self: the fitted encoder instance
         '''
-        self.classes = np.unique(X)
+        self.classes = self._validate_params(X)
         self.n_classes = len(self.classes)
 
         self.kwargs = kwargs
@@ -60,3 +68,15 @@ class OneHotEncoder(MetadataMixin, SaveMixin, TransformMixin):
         for index, class_ in enumerate(self.classes):
             one_hot[X == class_, index] = 1
         return one_hot
+
+    @type_safe
+    @not_none
+    def _validate_params(self, labels: Union[np.ndarray, list, tuple]) -> np.ndarray:
+        labels = np.asarray(labels)
+
+        if labels.ndim != 1:
+            raise errors['OneHotEncoderError'](
+                f'labels array must be 1 dimensional'
+            )
+
+        return np.unique(labels)
