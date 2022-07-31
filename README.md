@@ -5,6 +5,7 @@
     + Added `__name_to_symbol_map__` in [`__init__.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/activation/__init__.py)
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
     + Removed unused import in [`activation_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/activation_mixin.py)
+    + Removed unused import in [`classifier_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/classifier_mixin.py)
     + Added functionality in [`layer_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer_mixin.py#L69)
     + TODO: Add documentation in [`layer_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer_mixin.py)
 + Module [`neural_network.layers`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/layers)
