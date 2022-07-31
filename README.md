@@ -1,12 +1,24 @@
 # Update Logs
 
 ## Change Log (July 31, 2022)
++ Module [`neural_network.activation`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/activation)
+    + Added `__name_to_symbol_map__` in [`__init__.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/activation/__init__.py)
++ Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
+    + Removed unused import in [`activation_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/activation_mixin.py)
+    + Added functionality in [`layer_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer_mixin.py#L69)
+    + TODO: Add documentation in [`layer_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer_mixin.py)
++ Module [`neural_network.layers`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/layers)
+    + Started the implementation of [`dense.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/dense.py)
+    + TODO: Complete implementation and add documentation
 + Module [`neural_network.metrics`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/metrics)
     + Added support for multiprocessing on all metrics
     + Added multilabel support for [`precision_score`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/precision_score.py#L75-L132) and [`recall_score`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/recall_score.py#L75-L132)
     + Added [`multilabel_confusion_matrix`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/confusion_matrix.py#L162-L201)
 + Module [`neural_network.preprocess`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/preprocess)
     + Refactored [`one_hot_encoder.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/one_hot_encoder.py), added parameter validation
+    + Refactored [`scaler.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/scaler.py), added better type checks for `__init__`
++ Module [`neural_network.utils`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/utils)
+    + Added support for subclass checks in [`typesafety.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/typesafety.py#L123)
 
 
 ## Change Log (July 30, 2022)
