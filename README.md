@@ -1,5 +1,14 @@
 # Update Logs
 
+## Change Log (July 31, 2022)
++ Module [`neural_network.metrics`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/metrics)
+    + Added support for multiprocessing on all metrics
+    + Added multilabel support for [`precision_score`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/precision_score.py#L75-L132) and [`recall_score`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/recall_score.py#L75-L132)
+    + Added [`multilabel_confusion_matrix`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/confusion_matrix.py#L162-L201)
++ Module [`neural_network.preprocess`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/preprocess)
+    + Refactored [`one_hot_encoder.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/preprocess/one_hot_encoder.py), added parameter validation
+
+
 ## Change Log (July 30, 2022)
 + Module [`neural_network.metrics`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/metrics)
     + Refactored [`accuracy_score.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/accuracy_score.py)
