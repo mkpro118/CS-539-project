@@ -33,9 +33,6 @@ def _score_binary_label(y_true: np.ndarray, y_pred: np.ndarray, *,
     return _recall(tp, fn)
 
 
-'''TODO below'''
-
-
 @type_safe
 @not_none
 def _score_multi_label_micro(y_true: np.ndarray, y_pred: np.ndarray, *,
@@ -67,8 +64,6 @@ def _score_multi_label_macro(y_true: np.ndarray, y_pred: np.ndarray, *,
 
     return np.mean(_recall(tp, fn))
 
-
-'''TODO above'''
 
 _scoring_functions = {
     'binary': _score_binary_label,
