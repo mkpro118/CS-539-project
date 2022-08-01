@@ -357,7 +357,7 @@ class Layer(MetadataMixin, SaveMixin):
     def trainable(self, value: bool):
         self._trainable = value
 
-        optimizer = self.__dict__.get('optimizer', None)
+        optimizer = getattr(self, 'optimizer', None)
 
         if optimizer is None:
             return
