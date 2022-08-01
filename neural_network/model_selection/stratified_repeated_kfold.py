@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Union
 
 from ..base.metadata_mixin import MetadataMixin
 from ..base.save_mixin import SaveMixin
@@ -10,7 +11,7 @@ from .stratified_kfold import StratifiedKFold
 
 
 @export
-class StratifiedRepeatedKFold(MetadataMixin, SaveMixin):
+class StratifiedRepeatedKFold(StratifiedKFold, MetadataMixin, SaveMixin):
     '''
     Used to split data into training and validation data
     in a stratified manner, repeated a given number of times
@@ -32,37 +33,30 @@ class StratifiedRepeatedKFold(MetadataMixin, SaveMixin):
                 Set a Random State to have reproducible results
 
         '''
-        self.n_splits = n_splits
+        super().__init__(
+            n_splits=n_splits,
+            shuffle=shuffle,
+            random_state=random_state,
+        )
+
         self.n_repeats = n_repeats
-        self.shuffle = shuffle
-        self.random_state = random_state
-        if shuffle:
-            if self.random_state is not None:
-                self._rng = np.random.default_rng(self.random_state)
-            else:
-                self._rng = np.random.default_rng()
-        else:
-            self._rng = None
 
     @type_safe(skip=('return',))
     @not_none
-    def split(self, X: np.ndarray, y: np.ndarray) -> tuple:
+    def split(self, X: Union[np.ndarray, list, tuple], y: Union[np.ndarray, list, tuple]) -> tuple:
         '''
         Iterator that performs a Stratified Repeated K-Fold split over the given array
 
         Parameters:
-            X: numpy.ndarray
+            X: Union[np.ndarray, list, tuple]
                 The array to perform splits over
+            y: Union[numpy.ndarray, list, tuple]
+                The labels to use for stratification
 
         Returns:
             tuple[numpy.ndarray, numpy.ndarray]: The first array is the indices
                 for the training set, the second array is the indices for the validating set
         '''
         for i in range(self.n_repeats):
-            splitter = StratifiedKFold(
-                n_splits=self.n_splits,
-                shuffle=self.shuffle,
-                random_state=self.random_state
-            )
-            for train, validate in splitter.split(X, y):
+            for train, validate in super().split(X, y):
                 yield train, validate

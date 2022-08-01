@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Union
 
 from ..base.metadata_mixin import MetadataMixin
 from ..base.save_mixin import SaveMixin
@@ -6,9 +7,11 @@ from ..base.save_mixin import SaveMixin
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
 
+from .kfold import KFold
+
 
 @export
-class StratifiedKFold(MetadataMixin, SaveMixin):
+class StratifiedKFold(KFold, MetadataMixin, SaveMixin):
     '''
     Used to split data into training and validation data
     in a stratified manner
@@ -28,31 +31,31 @@ class StratifiedKFold(MetadataMixin, SaveMixin):
                 Set a Random State to have reproducible results
 
         '''
-        self.n_splits = n_splits
-        self.shuffle = shuffle
-        self.random_state = random_state
-        if shuffle:
-            if self.random_state is not None:
-                self._rng = np.random.default_rng(self.random_state)
-            else:
-                self._rng = np.random.default_rng()
+        super().__init__(
+            n_splits=n_splits,
+            shuffle=shuffle,
+            random_state=random_state,
+        )
 
     @type_safe(skip=('return',))
     @not_none
-    def split(self, X: np.ndarray, y: np.ndarray) -> tuple:
+    def split(self, X: Union[np.ndarray, list, tuple],
+              y: Union[np.ndarray, list, tuple]) -> tuple:
         '''
         Iterator that performs Stratified K-Fold split over the given array
 
         Parameters:
-            X: numpy.ndarray
+            X: Union[numpy.ndarray, list, tuple]
                 The array to perform splits over
-            y: numpy.ndarray
+            y: Union[numpy.ndarray, list, tuple]
                 The labels to use for stratification
 
         Returns:
             tuple[numpy.ndarray, numpy.ndarray]: The first array is the indices
             for the training set, the second array is the indices for the validating set
         '''
+        X = np.asarray(X)
+        y = np.asarray(y)
 
         _, y_idx, y_inv = np.unique(y, return_index=True, return_inverse=True)
         _, y_idx_inv = np.unique(y_idx, return_inverse=True)
