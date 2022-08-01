@@ -1,7 +1,6 @@
 from typing import Union, Callable
 from numbers import Integral, Real
 import numpy as np
-from functools import wraps
 
 from .mixin import mixin
 from .activation_mixin import ActivationMixin
@@ -12,7 +11,9 @@ from ..activation import __name_to_symbol_map__ as symbol_map
 from ..exceptions import ExceptionFactory
 from ..preprocess import Scaler
 from ..utils.typesafety import type_safe, not_none
+from ..utils.functools import MethodInvalidator
 
+# List of activation functions mapped to their names
 activation_symbol_map = {name.lower(): symbol for name, symbol in symbol_map.items()}
 
 errors = {
@@ -22,47 +23,6 @@ errors = {
     'InvalidConstraintsError': ExceptionFactory.register('InvalidConstraintsError'),
     'InvalidActivationError': ExceptionFactory.register('InvalidActivationError'),
 }
-
-
-class MethodInvalidator:
-    invalid_methods = set()
-
-    @staticmethod
-    @type_safe
-    @not_none
-    def register(func: Callable):
-        MethodInvalidator.invalid_methods.add(func.__qualname__)
-
-    @staticmethod
-    @type_safe
-    @not_none
-    def validate(func: Callable):
-        if func.__qualname__ in MethodInvalidator.invalid_methods:
-            MethodInvalidator.invalid_methods.remove(func.__qualname__)
-
-    @staticmethod
-    @type_safe
-    @not_none
-    def is_invocable(func: Callable) -> bool:
-        return func.__qualname__ not in MethodInvalidator.invalid_methods
-
-    @staticmethod
-    @type_safe
-    @not_none(nullable=('invalid_logic',))
-    def check_validity(func: Callable = None, *, invalid_logic: Callable = None) -> Callable:
-        def decorator(func):
-            @wraps(func)
-            def inner(self, *args, **kwargs):
-                if not MethodInvalidator.is_invocable(func):
-                    return invalid_logic(self, *args, **kwargs)
-                return func(self, *args, **kwargs)
-            return inner
-
-        if invalid_logic is None:
-            invalid_logic = lambda *_, **__: None
-            return decorator(func)
-        else:
-            return decorator
 
 
 @mixin  # Prevents instantiation
@@ -105,7 +65,6 @@ class LayerMixin(MetadataMixin, SaveMixin):
 
         try:
             self.activation = activation_symbol_map[self.activation.replace('_', '').lower()]
-            print('KeyError')
         except KeyError:
             raise errors['InvalidActivationError'](
                 f'activation={self.activation} is not a recognized activation function'
@@ -141,7 +100,6 @@ class LayerMixin(MetadataMixin, SaveMixin):
 
     @MethodInvalidator.check_validity
     def _check_bias_constraints(self):
-        print('checking')
         if self.bias_constraints is None:
             return MethodInvalidator.register(self.ensure_bias_constraints)
 

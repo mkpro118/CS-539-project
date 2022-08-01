@@ -2,6 +2,8 @@ from functools import wraps
 from inspect import getfullargspec
 from typing import Callable, Iterable, Union, get_args as get_subscripts
 
+from .functools import unwrap
+
 # Sentinel tuple for function signatures
 SENTINEL_TUPLE = tuple()
 
@@ -256,14 +258,8 @@ def not_none(nullable: Union[Callable, Iterable] = SENTINEL_TUPLE,
 
         # Unwrap func in order to avoid messing with other decorators
         orig_func = func
-        while follow_wrapped:
-            try:
-                orig_func = orig_func.__wrapped__
-                # If follow_wrapped is of type int, we unwrap to that depth
-                if isinstance(follow_wrapped, int):
-                    follow_wrapped -= 1
-            except AttributeError:
-                break
+        if follow_wrapped:
+            orig_func = unwrap(func, follow_wrapped)
 
         specs = getfullargspec(orig_func)
         kw_filter = lambda y: lambda x: x not in y
