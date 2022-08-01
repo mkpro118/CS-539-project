@@ -58,4 +58,4 @@ class MetadataMixin:
             dict: attribute names as the keys, and the corresponding values.
         '''
         attrs = tuple(filter(ATTR_FILTER, dir(self)))
-        return dict((attr, getattr(self, attr)) for attr in attrs)
+        return {attr: _ for attr in attrs if not callable(_ := getattr(self, attr))}
