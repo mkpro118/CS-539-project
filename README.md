@@ -2,7 +2,8 @@
 
 ## Change Log (August 1, 2022)
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
-    + Refactored [`layer_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer_mixin.py#L29) to use [`utils.functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py)
+    + Renamed `layer_mixin.py` to [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py#L29), since it's a base class, not a mixin
+    + Refactored [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py#L29) to use [`utils.functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py)
 + Module [`neural_network.utils`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/utils)
     + Added file [`functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py)
     + Refactored [`typesafety.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/typesafety.py) to use [`functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py)
@@ -13,8 +14,8 @@
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
     + Removed unused import in [`activation_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/activation_mixin.py)
     + Removed unused import in [`classifier_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/classifier_mixin.py)
-    + Added functionality in [`layer_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer_mixin.py#L29)
-    + TODO: Add documentation in [`layer_mixin.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer_mixin.py)
+    + Added functionality in [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py#L29)
+    + TODO: Add documentation in [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py)
 + Module [`neural_network.layers`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/layers)
     + Started the implementation of [`dense.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/dense.py)
     + TODO: Complete implementation and add documentation
@@ -153,7 +154,7 @@
         + [`not_none`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/typesafety.py#L161) decorator has been implemented
 + Module `neural_network.aux_math` has been added, which contains auxillary functions to properly perform mathematical operations on tensors.
 
-## New Project Structure
+## Project Structure
 
 ```bash
 .
@@ -182,7 +183,7 @@
 │    │    ├── activation_mixin.py
 │    │    ├── cost_mixin.py
 │    │    ├── classifier_mixin.py
-│    │    ├── layer_mixin.py
+│    │    ├── layer.py
 │    │    ├── metadata_mixin.py
 │    │    ├── mixin.py
 │    │    ├── model_mixin.py
