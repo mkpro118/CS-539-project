@@ -122,7 +122,7 @@ def type_safe(func: Callable = None, /,
                         continue
 
                     # assert there's no type mismatch
-                    assert isinstance(real, (*annotation, NONE_TYPE, str)) or issubclass(real, (*annotation, NONE_TYPE, str))
+                    assert isinstance(real, (*annotation, NONE_TYPE)) or issubclass(real, annotation)
                 except AssertionError:
                     # store mismatches if any in the `errors` list
                     q = "'"
