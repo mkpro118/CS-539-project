@@ -12,9 +12,13 @@ from ..exceptions import ExceptionFactory
 from ..preprocess import Scaler
 from ..utils.typesafety import type_safe, not_none
 from ..utils.functools import MethodInvalidator
+from ..utils.exports import export
 
 # List of activation functions mapped to their names
 activation_symbol_map = {name.lower(): symbol for name, symbol in symbol_map.items()}
+activation_symbol_map_inv = {v: k for k, v in activation_symbol_map.items()}
+activation_symbol_map_inv[None] = None
+
 
 errors = {
     'WeightInitializationError': ExceptionFactory.register('WeightInitializationError'),
@@ -26,13 +30,24 @@ errors = {
 }
 
 
+@export
 @mixin  # Prevents instantiation
 class Layer(MetadataMixin, SaveMixin):
     '''
     Base class for all Layers.
 
+    Descendant classes must implement the following methods
+    build(input_dim): To initialize layer's variables
+    optimize(args): For trainable layers, this optimization logic for the variables
+    forward(input): Apply this layer on the given inputs in forward propagation
+    backward(input, gradient): Apply this layer on the given inputs in backward propagation
+
+    It is also recommended to implement __init__, to define custom attributes and variables
+
     Inherited from MetadataMixin
-        method `get_metadata` to computer layer's metadata
+        method `get_metadata` to compute layer's metadata
+    Inherited from SaveMixin
+        method `save` to save layer's metadata
     '''
 
     @type_safe
@@ -47,6 +62,12 @@ class Layer(MetadataMixin, SaveMixin):
         Parameters: all params are keyword only
             activation: Union[str, ActivationMixin], default = None
                 The activation function to apply to the result of this layer
+                If of type string, must be one of the following
+                    'leaky_relu'
+                    'relu'
+                    'sigmoid'
+                    'softmax'
+                    'tanh'
             use_bias: bool, default = True
                 Add a bias to the result of this layer
             trainable: bool, default = True
@@ -74,13 +95,22 @@ class Layer(MetadataMixin, SaveMixin):
     @type_safe
     @not_none
     def _check_activation(self):
+        '''
+        Assigns the activation function to be applied to the result of this layer
+
+        If activation=None, invalidates the apply_activation method
+        If activation inherits from ActivationMixin, the given activation is assigned
+        If activation is of type string,
+        '''
         if self.activation is None:
             return MethodInvalidator.register(self.apply_activation)
 
         if isinstance(self.activation, ActivationMixin):
+            self._activation = activation_symbol_map_inv.get(self.activation, self.activation.__class__.__name__)
             return
 
         try:
+            self._activation = self.activation
             self.activation = activation_symbol_map[self.activation.replace('_', '').lower()]
         except KeyError:
             raise errors['InvalidActivationError'](
@@ -90,10 +120,29 @@ class Layer(MetadataMixin, SaveMixin):
     @MethodInvalidator.check_validity(invalid_logic=lambda self, X: X)
     @type_safe
     def apply_activation(self, X: np.ndarray) -> np.ndarray:
+        '''
+        Applies the activation function to the given inputs
+
+        If activation=None, returns the inputs given
+
+        Parameters:
+            X: np.ndarray
+                The inputs to apply the activation function on
+
+        Returns:
+            np.ndarray: The activated inputs
+        '''
         return self.activation.apply(X)
 
     @type_safe
     def _check_constraints(self):
+        '''
+        Shortcut to check the constraints for the weights and biases
+
+        if use_bias=False, invalidates the ensure_bias_constraints() method
+        if bias_constraints=None, invalidates the ensure_bias_constraints() method
+        if weights_constraints=None, invalidates the ensure_weights_constraints() method
+        '''
         if not self.use_bias:
             MethodInvalidator.register(self._check_bias_constraints)
             MethodInvalidator.register(self.ensure_bias_constraints)
@@ -103,6 +152,11 @@ class Layer(MetadataMixin, SaveMixin):
 
     @type_safe
     def _check_weights_constraints(self):
+        '''
+        Checks the constrains for the weights
+
+        if weights_constraints=None, invalidates the ensure_weight_constraints() method
+        '''
         if self.weights_constraints is None:
             return MethodInvalidator.register(self.ensure_weight_constraints)
 
@@ -117,6 +171,11 @@ class Layer(MetadataMixin, SaveMixin):
 
     @MethodInvalidator.check_validity
     def _check_bias_constraints(self):
+        '''
+        Checks the constrains for the weights
+
+        if weights_constraints=None, invalidates the ensure_weight_constraints() method
+        '''
         if self.bias_constraints is None:
             return MethodInvalidator.register(self.ensure_bias_constraints)
 
@@ -131,6 +190,11 @@ class Layer(MetadataMixin, SaveMixin):
 
     @MethodInvalidator.check_validity
     def ensure_weight_constraints(self):
+        '''
+        Clips the weights inplace to conform to the constraints
+
+        if weights_constraints=None, this method is not executed
+        '''
         np.clip(
             self.weights,
             self.weights_constraints[0],
@@ -140,6 +204,11 @@ class Layer(MetadataMixin, SaveMixin):
 
     @MethodInvalidator.check_validity
     def ensure_bias_constraints(self):
+        '''
+        Clips the bias inplace to conform to the constraints
+
+        if bias_constraints=None, this method is not executed
+        '''
         np.clip(
             self.bias,
             self.bias_constraints[0],
@@ -148,27 +217,90 @@ class Layer(MetadataMixin, SaveMixin):
         )
 
     def build(self, *args, **kwargs):
+        '''
+        Defines the logic for generating the layer's variables
+        NOTE: This method must set the `built` attribute of the layer to True
+
+        Must be implemented by descendent classes
+
+        Parameters:
+            Must be defined by subclasses
+
+        Returns:
+            Must be defined by subclasses
+        '''
         raise errors['NotImplementedError'](
             f'build is not implemented'
         )
 
     def optimize(self, *args, **kwargs):
+        '''
+        Defines the logic for optimization during back propagation for trainable layers
+
+        Must be implemented by descendent classes
+
+        Parameters:
+            Must be defined by subclasses
+
+        Returns:
+            Must be defined by subclasses
+        '''
         if self.trainable:
             raise errors['NotImplementedError'](
                 f'optimization is not implemented'
             )
 
     def forward(self, *args, **kwargs):
+        '''
+        Defines the layer's logic for forward propagation
+
+        Must be implemented by descendent classes
+
+        Parameters:
+            Must be defined by subclasses
+
+        Returns:
+            Must be defined by subclasses
+        '''
         raise errors['NotImplementedError'](
             f'forward propagation is not implemented'
         )
 
     def backward(self, *args, **kwargs):
+        '''
+        Defines the layer's logic for back propagation
+
+        Must be implemented by descendent classes
+
+        Parameters:
+            Must be defined by subclasses
+
+        Returns:
+            Must be defined by subclasses
+        '''
         raise errors['NotImplementedError'](
             f'backward propagation is not implemented'
         )
 
-    def __call__(self, *args, backward, **kwargs):
+    def __call__(self, *args, backward: bool = False, **kwargs):
+        '''
+        Allows the layer to be callable
+
+        On the first call to this method, it executes the layer's build() function and returns None
+
+        On subsequent executions, the logic depends on the keyword argument `backward`
+            if backward=False, runs the layer's forward propagation logic
+            if backward=True, runs the layer's backward propagation logic
+
+        Parameters:
+            backward: bool, default = False
+                Special parameter, defines the context of execution of this method
+
+            Other parameters are defined by the layer's build, forward and backward methods
+
+        Returns:
+            The result of the forward or backward propagation depending on the execution context
+        '''
         if not self.built:
             return self.build(*args, **kwargs)
 
@@ -234,6 +366,15 @@ class Layer(MetadataMixin, SaveMixin):
             MethodInvalidator.validate(optimizer)
         else:
             MethodInvalidator.register(optimizer)
+
+    @type_safe
+    @not_none
+    def get_metadata(self):
+        data = super().get_metadata()
+        data.update({
+            'activation': self._activation,
+        })
+        return data
 
     @type_safe
     def __str__(self):
