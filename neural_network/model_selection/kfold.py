@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Union
 
 from ..base.metadata_mixin import MetadataMixin
 from ..base.save_mixin import SaveMixin
@@ -38,12 +39,12 @@ class KFold(MetadataMixin, SaveMixin):
 
     @type_safe(skip=('return',))
     @not_none
-    def split(self, X: np.ndarray) -> tuple:
+    def split(self, X: Union[np.ndarray, list, tuple]) -> tuple:
         '''
         Iterator that performs a K-Fold split over the given array
 
         Parameters:
-            X: numpy.ndarray
+            X: Union[numpy.ndarray, list, tuple]
                 The array to perform splits over
 
         Returns:
@@ -51,6 +52,7 @@ class KFold(MetadataMixin, SaveMixin):
             for the training set, the second array is the indices for the validating set
         '''
         n_samples = len(X)
+        X = np.asarray(X)
 
         indices = np.arange(n_samples)
         if self.shuffle:
