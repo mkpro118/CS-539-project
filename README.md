@@ -3,10 +3,21 @@
 ## Change Log (August 1, 2022)
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
     + Renamed `layer_mixin.py` to [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py#L29), since it's a base class, not a mixin
-    + Refactored [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py#L29) to use [`utils.functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py)
+    + Renamed `model_mixin.py` to [`model.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/model.py#L29), since it's a base class, not a mixin
+    + Refactored [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py#L29) to use [`utils.functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py), Added partial docs
+    + Refactored ['metadata_mixin.py'](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/metadata_mixin.py) to filter callables since they are not saveable
++ Module [`neural_network.layers`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/layers)
+    + Started implementing [`dense.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/dense.py)
++ Module [`neural_network.model`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model)
+    + Started implementing [`sequential.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model/sequential.py)
++ Module [`neural_network.model_selection`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model_selection)
+    + Refactored [`kfold.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model_selection/kfold.py) to add support for `list`s and `tuple`s
+    + Refactored [`repeated_kfold.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model_selection/repeated_kfold.py) to add support for `list`s and `tuple`s, and to use `KFold` as the base class
+    + Refactored [`stratified_kfold.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model_selection/stratified_kfold.py) to add support for `list`s and `tuple`s, and to use `KFold` as the base class
+    + Refactored [`stratified_repeated_kfold.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model_selection/stratified_repeated_kfold.py) to add support for `list`s and `tuple`s, and to use `KFold` as the base class
 + Module [`neural_network.utils`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/utils)
     + Added file [`functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py)
-    + Refactored [`typesafety.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/typesafety.py) to use [`functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py)
+    + Refactored [`typesafety.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/typesafety.py) to use [`functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py), Removed unnecessary checks
 
 ## Change Log (July 31, 2022)
 + Module [`neural_network.activation`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/activation)
