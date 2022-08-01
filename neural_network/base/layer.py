@@ -22,15 +22,14 @@ errors = {
     'InvalidInvocationError': ExceptionFactory.register('InvalidInvocationError'),
     'InvalidConstraintsError': ExceptionFactory.register('InvalidConstraintsError'),
     'InvalidActivationError': ExceptionFactory.register('InvalidActivationError'),
+    'NotImplementedError': ExceptionFactory.register('NotImplementedError'),
 }
 
 
 @mixin  # Prevents instantiation
-class LayerMixin(MetadataMixin, SaveMixin):
+class Layer(MetadataMixin, SaveMixin):
     '''
-    Mixin class for all Layers.
-
-    Provides __repr__ and __str__ for the layers.
+    Base class for all Layers.
 
     Inherited from MetadataMixin
         method `get_metadata` to computer layer's metadata
@@ -42,17 +41,35 @@ class LayerMixin(MetadataMixin, SaveMixin):
                  use_bias: bool = True,
                  trainable: bool = True,
                  weights_constraints: Union[np.ndarray, list, tuple] = None,
-                 bias_constraints: Union[np.ndarray, list, tuple] = None):
+                 bias_constraints: Union[np.ndarray, list, tuple] = None,
+                 name: str = None):
+        '''
+        Parameters: all params are keyword only
+            activation: Union[str, ActivationMixin], default = None
+                The activation function to apply to the result of this layer
+            use_bias: bool, default = True
+                Add a bias to the result of this layer
+            trainable: bool, default = True
+                Sets the layers variables to be trainable or not
+            weights_constrains: Union[np.ndarray, list, tuple] of shape (2,), default = None
+                Sets a bound on this layer's weights
+            bias_constrains: Union[np.ndarray, list, tuple] of shape (2,), default = None
+                Sets a bound on this layer's bias
+            name: str, default = None
+                The name of this layer, must be unique in a model
+        '''
         self.activation = activation
         self.use_bias = use_bias
         self._trainable = trainable
         self.weights_constraints = weights_constraints
         self.bias_constraints = bias_constraints
+        self.name = name
 
         self._check_activation()
         self._check_constraints()
 
         self._rng = np.random.default_rng()
+        self.built = False
 
     @type_safe
     @not_none
@@ -130,11 +147,35 @@ class LayerMixin(MetadataMixin, SaveMixin):
             out=self.bias
         )
 
+    def build(self, *args, **kwargs):
+        raise errors['NotImplementedError'](
+            f'build is not implemented'
+        )
+
     def optimize(self, *args, **kwargs):
         if self.trainable:
-            raise errors['OptimizationError'](
-                f'optimization logic is not implemented'
+            raise errors['NotImplementedError'](
+                f'optimization is not implemented'
             )
+
+    def forward(self, *args, **kwargs):
+        raise errors['NotImplementedError'](
+            f'forward propagation is not implemented'
+        )
+
+    def backward(self, *args, **kwargs):
+        raise errors['NotImplementedError'](
+            f'backward propagation is not implemented'
+        )
+
+    def __call__(self, *args, backward, **kwargs):
+        if not self.built:
+            return self.build(*args, **kwargs)
+
+        if backward:
+            return self.backward(*args, **kwargs)
+        else:
+            return self.forward(*args, **kwargs)
 
     @type_safe
     @not_none(nullable=('scale',))
@@ -183,11 +224,13 @@ class LayerMixin(MetadataMixin, SaveMixin):
     @not_none
     def trainable(self, value: bool):
         self._trainable = value
+
         optimizer = self.__dict__.get('optimizer', None)
+
         if optimizer is None:
             return
 
-        if self.trainable:
+        if self._trainable:
             MethodInvalidator.validate(optimizer)
         else:
             MethodInvalidator.register(optimizer)
