@@ -58,6 +58,8 @@ class Dense(Layer):
         if not self.use_bias:
             self.bias[:] = 0
 
+        return self.nodes
+
     @type_safe
     @not_none
     def forward(self, X: np.ndarray) -> np.ndarray:
