@@ -3,8 +3,9 @@ from typing import Union
 from ..base.cost_mixin import CostMixin
 from ..base.classifier_mixin import ClassifierMixin
 from ..base.layers import Layer
+from ..base.model import Model
 from ..exceptions import ExceptionFactory
-from ..utils.typesafety import type_safe
+from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
 
 
@@ -31,7 +32,12 @@ class Sequential(Model, ClassifierMixin):
             self.layers.extend(layers)
 
     @type_safe
+    @not_none
     def add(self, *layers: tuple):
+        if not layers:
+            raise errors['SequentialModelError'](
+                f'Found no layers to add'
+            )
         for layer in layers:
             if not isinstance(layer, Layer):
                 raise errors['SequentialModelError'](
@@ -40,10 +46,8 @@ class Sequential(Model, ClassifierMixin):
                 )
             self.layers.append(layer)
 
-    def pop(self):
-        pass
-
     @type_safe
+    @not_none
     def compile(self, cost: Union[str, CostMixin],
                 metrics: Union[list, tuple]) -> 'Sequential':
         if not self.layers:
