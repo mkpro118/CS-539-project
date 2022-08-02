@@ -80,5 +80,5 @@ class Dense(Layer):
 
     @type_safe
     def optimize(self, gradient: np.ndarray):
-        self.weights -= (self.learning_rate / len(self._x)) * (self._X.T @ gradient)
-        self.bias -= (self.learning_rate / len(self._x)) * gradient
+        self.weights -= (self.learning_rate / len(self._X)) * (self._X.T @ gradient)
+        self.bias -= (self.learning_rate / len(self._X)) * gradient
