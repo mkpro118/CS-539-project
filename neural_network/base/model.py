@@ -34,6 +34,8 @@ known_metrics = {
     'recall_score': recall_score,
 }
 
+known_metrics_inv = {v: k for k, v in known_metrics.items()}
+
 known_costs = {
     'crossentropy': CrossEntropy,
     'mse': MeanSquaredError,
@@ -55,6 +57,7 @@ class Model(MetadataMixin, SaveMixin):
     def __init__(self):
         self.history = []
         self.checkpoints = []
+        self._trainable = True
 
     @type_safe
     @not_none
@@ -71,11 +74,16 @@ class Model(MetadataMixin, SaveMixin):
         self.cost = cost
 
         self.metrics = set()
+
+        if not metrics:
+            metrics = ['accuracy_score']
+
         for metric in metrics:
             if isinstance(metric, str):
                 metric = known_metrics.get(metric, None)
+
                 if metric is None:
-                    raise errors['UnknownmetricError'](
+                    raise errors['UnknownMetricError'](
                         f'{metric=} is not a recognized metric function. Known metrics are '
                         f'{", ".join(known_metrics.keys())}'
                     )
@@ -94,18 +102,19 @@ class Model(MetadataMixin, SaveMixin):
 
     @type_safe
     @not_none
-    def fit(self,
-            X: np.ndarray = None,
-            y: np.ndarray = None, *,
+    def fit(self, *,
             epochs: Union[int, Integral, np.integer] = None,
             batch_size: Union[int, Integral, np.integer] = None,
             steps_per_epoch: Union[int, Integral, np.integer] = None,
-            shuffle: Union[int, Integral, np.integer] = None,
+            shuffle: bool = False,
             validation_data: Union[np.ndarray, list, tuple] = None,
             validation_split: Union[float, np.floating, Real] = None,
             validation_batch_size: Union[int, Integral, np.integer] = None,
             validator: KFold = None,
             verbose: bool = True):
+
+        self._check_compiled()
+
         self.epochs = epochs
         self.batch_size = batch_size
         self.steps_per_epoch = steps_per_epoch
@@ -131,12 +140,22 @@ class Model(MetadataMixin, SaveMixin):
     def checkpoint(self):
         self.checkpoints.append(self.get_metadata())
 
+    def _train(self, X: np.ndarray, y: np.ndarray):
+        raise errors['NotImplementedError'](
+            f'Descendant classes must define their implementation of the train method'
+        )
+
     def predict(self, *args, **kwargs):
         raise errors['NotImplementedError'](
             f'Descendant classes must define their implementation of the predict method'
         )
 
-    def evaluate(self, *args, **kwargs):
-        raise errors['NotImplementedError'](
-            f'Descendant classes must define their implementation of the evalute method'
-        )
+    @property
+    def trainable(self):
+        return self._trainable
+
+    @trainable.setter
+    def trainable(self, value):
+        self._trainable = value
+        for layer in self.layers:
+            layer.trainable = self._trainable
