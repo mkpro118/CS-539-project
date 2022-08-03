@@ -42,10 +42,11 @@ def accuracy_by_label(y_true: np.ndarray, y_pred: np.ndarray, *,
             f'y_true and y_pred must have the same shapes, '
             f'{y_true.shape} != {y_pred.shape}'
         )
-    return (
-        (
-            correct := np.diagonal(
-                (cmat := confusion_matrix(y_true, y_pred, use_multiprocessing=use_multiprocessing))
-            )
-        ) / np.sum(cmat, axis=0)
-    ) if normalize else correct
+    cmat = confusion_matrix(y_true, y_pred, use_multiprocessing=use_multiprocessing)
+    correct = np.diagonal(cmat)
+    if normalize:
+        _sum = np.sum(cmat, axis=0)
+        _sum[_sum == 0] = 1
+        correct = correct / _sum
+
+    return correct
