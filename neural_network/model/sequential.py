@@ -1,5 +1,5 @@
 from typing import Union
-from numbers import Integral, Real
+from numbers import Integral
 import numpy as np
 
 from ..base.cost_mixin import CostMixin
@@ -7,7 +7,6 @@ from ..base.classifier_mixin import ClassifierMixin
 from ..base.layer import Layer
 from ..base.model import Model
 from ..exceptions import ExceptionFactory
-from..model_selection import KFold
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
 
@@ -113,11 +112,7 @@ class Sequential(Model, ClassifierMixin):
             verbose=verbose,
         )
 
-        if y.ndim == 1:
-            self._classify = False
-        elif y.ndim == 2:
-            self._classify = True
-        else:
+        if y.ndim not in (1, 2,):
             raise errors['SequentialModelError'](
                 f'Training labels must be a 1 or 2 dimensional array'
             )
@@ -137,11 +132,12 @@ class Sequential(Model, ClassifierMixin):
 
             if validation_data:
                 targets = validation_data[1]
-                if y.ndim == 2:
-                    predictions = self.predict(validation_data[0], classify=True)
-                else:
-                    predictions = self.predict(validation_data[0])
+                predictions = self.predict(validation_data[0])
+
                 error = self.cost.apply(targets, predictions)
+
+                if y.ndim == 2:
+                    predictions = (predictions == predictions.max(axis=1)[:, None]).astype(int)
 
                 metrics = {}
                 for metric in self.metrics:
@@ -150,15 +146,16 @@ class Sequential(Model, ClassifierMixin):
                 print('\n'.join(map(lambda x: f'  {x[0]}: {x[1]}', metrics.items())))
 
             if not self.verbose:
-                print()
                 continue
 
             targets = y
-            if y.ndim == 2:
-                predictions = self.predict(X, classify=True)
-            else:
-                predictions = self.predict(X)
+            predictions = self.predict(X)
+
             error = self.cost.apply(targets, predictions)
+
+            if y.ndim == 2:
+                predictions = (predictions == predictions.max(axis=1)[:, None]).astype(int)
+
             metrics = {}
             for metric in self.metrics:
                 metrics[f'{metric.__name__}'] = np.around(metric(targets, predictions), 4)
