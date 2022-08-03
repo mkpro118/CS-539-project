@@ -7,6 +7,8 @@ from ..base.activation_mixin import ActivationMixin
 
 @export
 class LeakyReLU(ActivationMixin):
+    name = 'leakyrelu'
+
     '''
     Leaky ReLU is a variant of the ReLU function
 

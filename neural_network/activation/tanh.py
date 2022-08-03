@@ -7,6 +7,8 @@ from ..base.activation_mixin import ActivationMixin
 
 @export
 class Tanh(ActivationMixin):
+    name = 'tanh'
+
     '''
     Provides methods for the Tanh activation function
 

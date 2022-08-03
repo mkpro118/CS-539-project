@@ -8,6 +8,8 @@ from .leaky_relu import LeakyReLU
 
 @export
 class ReLU(LeakyReLU, ActivationMixin):
+    name = 'relu'
+
     '''
     Provides methods for the ReLU activation function
 

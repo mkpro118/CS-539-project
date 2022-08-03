@@ -12,6 +12,8 @@ from ..utils.exports import export
 
 @export
 class MeanSquaredError(CostMixin, MetadataMixin, SaveMixin):
+    name = 'mse'
+
     '''
     Provides static methods to compute the mean squared error loss
     and it's derivative.

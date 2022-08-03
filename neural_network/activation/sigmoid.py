@@ -7,6 +7,8 @@ from ..base.activation_mixin import ActivationMixin
 
 @export
 class Sigmoid(ActivationMixin):
+    name = 'sigmoid'
+
     '''
     Provides methods for the Sigmoid activation function
 

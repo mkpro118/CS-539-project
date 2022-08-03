@@ -13,6 +13,8 @@ from ..utils.exports import export
 
 @export
 class CrossEntropy(CostMixin, MetadataMixin, SaveMixin):
+    name = 'crossentropy'
+
     '''
     Provides static methods to compute the cost entropy loss
     and it's derivative corresponding to the softmax function
@@ -33,7 +35,7 @@ class CrossEntropy(CostMixin, MetadataMixin, SaveMixin):
         Returns:
             float: average loss over all samples
         '''
-        return np.mean(np.sum(-y_true * np.log2(y_pred), axis=1))
+        return np.mean(np.sum(-y_true * np.log2(y_pred + 1e-15), axis=1))
 
     @staticmethod
     @type_safe

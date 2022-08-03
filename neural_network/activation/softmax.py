@@ -7,6 +7,8 @@ from ..base.activation_mixin import ActivationMixin
 
 @export
 class Softmax(ActivationMixin):
+    name = 'softmax'
+
     '''
     Provides methods for the Softmax activation function
 
