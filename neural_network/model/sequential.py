@@ -146,7 +146,7 @@ class Sequential(Model, ClassifierMixin):
                 metrics = {}
                 for metric in self.metrics:
                     metrics[f'{metric.__name__}'] = np.around(metric(targets, predictions), 4)
-                print(f'Validation loss: {error}')
+                print(f'\nValidation loss: {error}')
                 print('\n'.join(map(lambda x: f'  {x[0]}: {x[1]}', metrics.items())))
 
             if not self.verbose:
@@ -163,7 +163,7 @@ class Sequential(Model, ClassifierMixin):
             for metric in self.metrics:
                 metrics[f'{metric.__name__}'] = np.around(metric(targets, predictions), 4)
 
-            print(f'Overall loss: {error}')
+            print(f'\nOverall loss: {error}')
             print('\n'.join(map(lambda x: f'  {x[0]}: {x[1]}', metrics.items())))
 
     def _run_epoch(self, X, y):
