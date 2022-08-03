@@ -1,4 +1,4 @@
-from typing import Union, Callable
+from typing import Union
 from numbers import Integral, Real
 import numpy as np
 
@@ -37,10 +37,18 @@ class Dense(Layer):
         self.learning_rate = float(learning_rate)
 
         if input_shape:
-            self.input_shape = np.asarray(input_shape)
+            if isinstance(input_shape, (int, Integral, np.integer)):
+                self.input_shape = np.asarray((input_shape,))
+            else:
+                self.input_shape = np.asarray(input_shape)
 
     @type_safe
-    def build(self, input_shape: Union[np.ndarray, list, tuple, int, Integral, np.integer] = None):
+    @not_none(nullable=('input_shape',))
+    def build(self,
+              _id: int,
+              input_shape: Union[np.ndarray, list, tuple, int, Integral, np.integer] = None):
+
+        self._id = _id
         if isinstance(input_shape, (int, Integral, np.integer)):
             input_shape = (input_shape,)
         input_shape = np.asarray(input_shape, dtype=int)
@@ -73,12 +81,14 @@ class Dense(Layer):
 
     @type_safe
     @not_none
-    def backward(self, gradient: np.ndarray, optimizer: Callable):
-        self._gradient = self.weights.T @ gradient
+    def backward(self, gradient: np.ndarray):
+        self._gradient = gradient @ self.weights.T
         self.optimize(gradient)
         return self._gradient
 
     @type_safe
+    @not_none
     def optimize(self, gradient: np.ndarray):
         self.weights -= (self.learning_rate / len(self._X)) * (self._X.T @ gradient)
-        self.bias -= (self.learning_rate / len(self._X)) * gradient
+        if self.use_bias:
+            self.bias -= (self.learning_rate / len(self._X))
