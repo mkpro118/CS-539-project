@@ -1,5 +1,20 @@
 # Update Logs
 
+## Change Log (August 3, 2022)
++ Modules [`neural_network.activation`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/activation), [`neural_network.cost`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/cost)
+    + Added a `name` property to all classes for easier inverse lookups
+    + Fixed divide by zero error in `log2` in [`cross_entropy.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/cost/cross_entropy.py)
++ Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
+    + [`model.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/model.py) has been implemented, TODO: Add docs
++ Module [`neural_network.layers`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/layers)
+    + [`dense.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/dense.py) has been implemented, TODO: Add docs
++ Module [`neural_network.metrics`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/metrics)
+    + Fixed zero division error in [`accuracy_by_label.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/metrics/accuracy_by_label.py)
++ Module [`neural_network.model`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model)
+    + [`sequential.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model/sequential.py) has been implemented, TODO: Add docs
++ Top Level [`main.py`](https://github.com/mkpro118/CS-539-project/blob/main/main.py)
+    + Added an example program demonstrating the usage of the [`neural_network`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network) library
+
 ## Change Log (August 1, 2022)
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
     + Renamed `layer_mixin.py` to [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py#L29), since it's a base class, not a mixin
