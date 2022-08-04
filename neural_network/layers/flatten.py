@@ -21,18 +21,21 @@ class Flatten(Layer):
     def build(self, _id: int,
               input_shape: Union[list, tuple, np.ndarray]) -> tuple:
         self._id = _id
+        self.input_shape = np.asarray(input_shape)
+        self.output_shape = np.prod(self.input_shape, dtype=int)
         self.built = True
-        self.output_shape = 1
-        for shape in input_shape:
-            self.output_shape *= shape
-        return self.output_shape
+        return (self.output_shape, )
 
     @type_safe
     @not_none
     def forward(self, X: np.ndarray) -> np.ndarray:
-        return np.reshape(X, (len(X), self.output_shape))
+        if X.ndim == 2:
+            return X
+        result = X.reshape(len(X), self.output_shape)
+        return result
 
     @type_safe
     @not_none
     def backward(self, X) -> np.ndarray:
-        return np.reshape(X, (len(X), self.input_shape))
+        result = X.reshape(len(X), *self.input_shape)
+        return result
