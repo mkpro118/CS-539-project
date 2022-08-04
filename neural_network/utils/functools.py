@@ -18,20 +18,24 @@ class MethodInvalidator:
     invalid_methods = set()
 
     @staticmethod
+    def get_id(func):
+        return f'{func.__qualname__} | {id(func)}'
+
+    @staticmethod
     def register(func: Callable):
         '''
 
         '''
-        MethodInvalidator.invalid_methods.add(func.__qualname__)
+        MethodInvalidator.invalid_methods.add(MethodInvalidator.get_id(func))
 
     @staticmethod
     def validate(func: Callable):
-        if func.__qualname__ in MethodInvalidator.invalid_methods:
-            MethodInvalidator.invalid_methods.remove(func.__qualname__)
+        if (_ := MethodInvalidator.get_id(func)) in MethodInvalidator.invalid_methods:
+            MethodInvalidator.invalid_methods.remove(_)
 
     @staticmethod
     def is_invocable(func: Callable) -> bool:
-        return func.__qualname__ not in MethodInvalidator.invalid_methods
+        return MethodInvalidator.get_id(func) not in MethodInvalidator.invalid_methods
 
     @staticmethod
     def check_validity(func: Callable = None, *, invalid_logic: Callable = None) -> Callable:
