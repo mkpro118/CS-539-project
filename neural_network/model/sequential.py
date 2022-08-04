@@ -7,6 +7,7 @@ from ..base.classifier_mixin import ClassifierMixin
 from ..base.layer import Layer
 from ..base.model import Model
 from ..exceptions import ExceptionFactory
+from ..layers import Flatten
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
 
@@ -20,6 +21,7 @@ errors = {
 class Sequential(Model, ClassifierMixin):
     @type_safe
     def __init__(self, *, layers: Layer = None, from_model: 'Sequential' = None):
+        super().__init__()
         self.layers = []
 
         if from_model is not None:
@@ -124,17 +126,15 @@ class Sequential(Model, ClassifierMixin):
             self.epochs = 10
         for epoch in range(self.epochs):
             if self.verbose:
-                print(f'Epoch {epoch + 1}')
+                print(f'\nEpoch {epoch + 1: >{len(str(self.epochs))}}/{self.epochs}')
             self._run_epoch(X, y)
-            if not self.validation_data:
-                print()
-                continue
+            print()
 
             if validation_data:
                 targets = validation_data[1]
                 predictions = self.predict(validation_data[0])
 
-                error = self.cost.apply(targets, predictions)
+                error = np.around(self.cost.apply(targets, predictions), 4)
 
                 if y.ndim == 2:
                     predictions = (predictions == predictions.max(axis=1)[:, None]).astype(int)
@@ -142,8 +142,8 @@ class Sequential(Model, ClassifierMixin):
                 metrics = {}
                 for metric in self.metrics:
                     metrics[f'{metric.__name__}'] = np.around(metric(targets, predictions), 4)
-                print(f'\nValidation loss: {error}')
-                print('\n'.join(map(lambda x: f'  {x[0]}: {x[1]}', metrics.items())))
+                print(f'  Validation loss: {error}', end=' ')
+                print(' | '.join(map(lambda x: f'{x[0]}: {x[1]}', metrics.items())))
 
             if not self.verbose:
                 continue
@@ -151,7 +151,7 @@ class Sequential(Model, ClassifierMixin):
             targets = y
             predictions = self.predict(X)
 
-            error = self.cost.apply(targets, predictions)
+            error = np.around(self.cost.apply(targets, predictions), 4)
 
             if y.ndim == 2:
                 predictions = (predictions == predictions.max(axis=1)[:, None]).astype(int)
@@ -160,20 +160,24 @@ class Sequential(Model, ClassifierMixin):
             for metric in self.metrics:
                 metrics[f'{metric.__name__}'] = np.around(metric(targets, predictions), 4)
 
-            print(f'\nOverall loss: {error}')
-            print('\n'.join(map(lambda x: f'  {x[0]}: {x[1]}', metrics.items())))
+            print(f'  Overall loss: {error}', end=' ')
+            print(' | '.join(map(lambda x: f'{x[0]}: {x[1]}', metrics.items())))
 
     def _run_epoch(self, X, y):
-        if not self.batch_size and not self.steps_per_epoch:
+        if self.batch_size and self.steps_per_epoch:
+            self.batch_size = len(X) // self.steps_per_epoch + 1
+        elif self.batch_size and not self.steps_per_epoch:
+            self.steps_per_epoch = len(X) // self.batch_size
+        elif self.steps_per_epoch and not self.batch_size:
+            self.batch_size = len(X) // self.steps_per_epoch + 1
+        else:
             self.steps_per_epoch = 5
             self.batch_size = len(X) // self.steps_per_epoch + 1
-        elif not self.steps_per_epoch:
-            self.steps_per_epoch = len(X) // self.batch_size
 
         batches = self._get_batches(X, y, self.batch_size, self.shuffle)
         for step, (X, y) in zip(range(self.steps_per_epoch), batches):
             if self.verbose:
-                print(f'  Step {step + 1}/{self.steps_per_epoch}', end=' ... ')
+                print(f'  Step {step + 1: >{len(str(self.steps_per_epoch))}}/{self.steps_per_epoch}', end=' ... ')
             self._run_batch(X, y)
             if self.verbose:
                 print(f'done')
