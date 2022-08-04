@@ -1,5 +1,20 @@
 # Update Logs
 
+## Change Log (August 4, 2022)
++ Module [`neural_network.aux_math`] has been removed, all required functionality is available in the scipy library
++ Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
+    + [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py): Invalidated optimizer functions for non trainable layers
++ Module [`neural_network.layers`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/layers)
+    + Implemented [`convolutional.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/convolutional.py)
+    + Implemented [`flatten.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/flatten.py)
+    + Fixed errors in [`dense.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/dense.py)
++ Module [`neural_network.model`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model)
+    + [`sequential.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model/sequential.py): Fixed a bug in computing the batch sizes, prettified verbose outputs
++ Module [`neural_network.utils`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/utils)
+    + Fixed a major bug in [`functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py), inherited methods had the same `__qualname__`, which caused multiple layers to have activation methods rendered invalid. Using `id` in conjunction with `__qualname__` now
++ Top Level [`Convolutional Example.py`](https://github.com/mkpro118/CS-539-project/blob/main/Convolutional Example.py)
+    + Added an example program demonstrating the usage of the [`Convolutional`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/convolutional.py) layer
+
 ## Change Log (August 3, 2022)
 + Modules [`neural_network.activation`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/activation), [`neural_network.cost`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/cost)
     + Added a `name` property to all classes for easier inverse lookups
@@ -230,7 +245,7 @@
 │    │    ├── __init__.py
 │    │    ├── convolutional.py
 │    │    ├── dense.py
-│    │    ├── reshape.py
+│    │    ├── flatten.py
 │    ├── metrics/
 │    │    ├── __init__.py
 │    │    ├── accuracy.py
@@ -262,6 +277,8 @@
 │    │    ├── typesafety.py
 │    ├── __init__.py
 ├── __init__.py
+├── Convolutional Example.ipynb
+├── Example.ipynb
 ├── main.py
 ├── .gitignore
 ├── README.md
