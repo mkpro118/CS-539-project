@@ -66,7 +66,8 @@ class Dense(Layer):
         if not self.use_bias:
             self.bias[:] = 0
 
-        return self.nodes
+        self.built = True
+        return (self.nodes,)
 
     @type_safe
     @not_none
@@ -77,14 +78,15 @@ class Dense(Layer):
                 f'{X.shape[-1]} != {self.input_shape[-1]}'
             )
         self._X = X
-        return self.apply_activation(self._X @ self.weights + self.bias)
+        result = super().apply_activation(self._X @ self.weights + self.bias)
+        return result
 
     @type_safe
     @not_none
     def backward(self, gradient: np.ndarray):
-        self._gradient = gradient @ self.weights.T
+        _gradient = gradient @ self.weights.T
         self.optimize(gradient)
-        return self._gradient
+        return _gradient
 
     @type_safe
     @not_none
