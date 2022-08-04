@@ -1,4 +1,4 @@
-from typing import Union, Callable
+from typing import Union
 from numbers import Integral, Real
 import numpy as np
 
@@ -88,6 +88,9 @@ class Layer(MetadataMixin, SaveMixin):
 
         self._check_activation()
         self._check_constraints()
+
+        if not self._trainable:
+            MethodInvalidator.register(self.optimize)
 
         self._rng = np.random.default_rng()
         self.built = False
@@ -282,33 +285,6 @@ class Layer(MetadataMixin, SaveMixin):
             f'backward propagation is not implemented'
         )
 
-    def __call__(self, *args, backward: bool = False, **kwargs):
-        '''
-        Allows the layer to be callable
-
-        On the first call to this method, it executes the layer's build() function and returns None
-
-        On subsequent executions, the logic depends on the keyword argument `backward`
-            if backward=False, runs the layer's forward propagation logic
-            if backward=True, runs the layer's backward propagation logic
-
-        Parameters:
-            backward: bool, default = False
-                Special parameter, defines the context of execution of this method
-
-            Other parameters are defined by the layer's build, forward and backward methods
-
-        Returns:
-            The result of the forward or backward propagation depending on the execution context
-        '''
-        if not self.built:
-            return self.build(*args, **kwargs)
-
-        if backward:
-            return self.backward(*args, **kwargs)
-        else:
-            return self.forward(*args, **kwargs)
-
     @type_safe
     @not_none(nullable=('scale',))
     def generate_weights(self, shape: Union[np.ndarray, list, tuple], *,
@@ -319,7 +295,7 @@ class Layer(MetadataMixin, SaveMixin):
         _shape = tuple(shape)
 
         _mean = mean if mean else 0.0
-        _std = std if std else 1.0
+        _std = std if std else 0.1
 
         if from_rng:
             _weights = from_rng.normal(loc=_mean, scale=_std, size=_shape)
@@ -357,9 +333,9 @@ class Layer(MetadataMixin, SaveMixin):
     def trainable(self, value: bool):
         self._trainable = value
 
-        optimizer = getattr(self, 'optimizer', None)
+        optimizer = getattr(self, 'optimize', None)
 
-        if optimizer is None:
+        if optimizer is None or not callable(optimizer):
             return
 
         if self._trainable:
