@@ -1,7 +1,7 @@
 # Update Logs
 
 ## Change Log (August 4, 2022)
-+ Module [`neural_network.aux_math`] has been removed, all required functionality is available in the scipy library
++ Module `neural_network.aux_math` has been removed, all required functionality is available in the scipy library
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
     + [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py): Invalidated optimizer functions for non trainable layers
 + Module [`neural_network.layers`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/layers)
