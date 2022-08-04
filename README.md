@@ -12,8 +12,8 @@
     + [`sequential.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model/sequential.py): Fixed a bug in computing the batch sizes, prettified verbose outputs
 + Module [`neural_network.utils`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/utils)
     + Fixed a major bug in [`functools.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/functools.py), inherited methods had the same `__qualname__`, which caused multiple layers to have activation methods rendered invalid. Using `id` in conjunction with `__qualname__` now
-+ Top Level [`Convolutional Example.py`](https://github.com/mkpro118/CS-539-project/blob/main/Convolutional Example.py)
-    + Added an example program demonstrating the usage of the [`Convolutional`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/convolutional.py) layer
++ Top Level [`Convolutional Example.py`](https://github.com/mkpro118/CS-539-project/blob/main/Convolutional%20Example.ipynb)
+    + Added an example program demonstrating the usage of the [`Convolutional Example.ipynb`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/convolutional.py) layer
 
 ## Change Log (August 3, 2022)
 + Modules [`neural_network.activation`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/activation), [`neural_network.cost`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/cost)
