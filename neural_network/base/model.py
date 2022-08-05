@@ -1,6 +1,7 @@
 from typing import Union
 from numbers import Real, Integral
 import numpy as np
+from collections import defaultdict
 
 from .activation_mixin import ActivationMixin
 from .mixin import mixin
@@ -55,7 +56,10 @@ class Model(MetadataMixin, SaveMixin):
     '''
 
     def __init__(self):
-        self.history = []
+        self.history = {
+            'overall': defaultdict(list),
+            'validation': defaultdict(list),
+        }
         self.checkpoints = []
         self._trainable = True
 
@@ -74,15 +78,18 @@ class Model(MetadataMixin, SaveMixin):
         self.cost = cost
 
         self.metrics = set()
+        self.metrics_names = []
 
         if not metrics:
             metrics = ['accuracy_score']
 
         for metric in metrics:
             if isinstance(metric, str):
+                self.metrics_names.append(metric)
                 metric = known_metrics.get(metric, None)
 
                 if metric is None:
+                    self.metrics_names.pop()
                     raise errors['UnknownMetricError'](
                         f'{metric=} is not a recognized metric function. Known metrics are '
                         f'{", ".join(known_metrics.keys())}'
@@ -103,26 +110,8 @@ class Model(MetadataMixin, SaveMixin):
     @type_safe
     @not_none
     def fit(self, *,
-            epochs: Union[int, Integral, np.integer] = None,
-            batch_size: Union[int, Integral, np.integer] = None,
-            steps_per_epoch: Union[int, Integral, np.integer] = None,
-            shuffle: bool = False,
-            validation_data: Union[np.ndarray, list, tuple] = None,
-            validation_split: Union[float, np.floating, Real] = None,
-            validation_batch_size: Union[int, Integral, np.integer] = None,
-            validator: KFold = None,
             verbose: bool = True):
-
         self._check_compiled()
-
-        self.epochs = epochs
-        self.batch_size = batch_size
-        self.steps_per_epoch = steps_per_epoch
-        self.shuffle = shuffle
-        self.validation_data = validation_data
-        self.validation_split = validation_split
-        self.validation_batch_size = validation_batch_size
-        self.validator = validator
         self.verbose = verbose
 
     @type_safe

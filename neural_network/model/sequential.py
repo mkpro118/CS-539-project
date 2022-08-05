@@ -7,13 +7,19 @@ from ..base.classifier_mixin import ClassifierMixin
 from ..base.layer import Layer
 from ..base.model import Model
 from ..exceptions import ExceptionFactory
-from ..layers import Flatten
+from ..layers import Convolutional, Dense, Flatten
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
 
 
 errors = {
     'SequentialModelError': ExceptionFactory.register('SequentialModelError'),
+}
+
+known_layers = {
+    'Convolutional': Convolutional,
+    'Dense': Dense,
+    'Flatten': Flatten,
 }
 
 
@@ -106,11 +112,6 @@ class Sequential(Model, ClassifierMixin):
             verbose: bool = True):
 
         super().fit(
-            epochs=epochs,
-            batch_size=batch_size,
-            steps_per_epoch=steps_per_epoch,
-            shuffle=shuffle,
-            validation_data=validation_data,
             verbose=verbose,
         )
 
@@ -119,65 +120,72 @@ class Sequential(Model, ClassifierMixin):
                 f'Training labels must be a 1 or 2 dimensional array'
             )
 
-        self._train(X, y, validation_data)
+        self._train(X, y, validation_data, epochs, batch_size, steps_per_epoch, shuffle)
 
-    def _train(self, X, y, validation_data):
-        if not self.epochs:
-            self.epochs = 10
-        for epoch in range(self.epochs):
+    def _train(self, X, y, validation_data, epochs, batch_size, steps_per_epoch, shuffle):
+        if not epochs:
+            epochs = 10
+        for epoch in range(epochs):
             if self.verbose:
-                print(f'\nEpoch {epoch + 1: >{len(str(self.epochs))}}/{self.epochs}')
-            self._run_epoch(X, y)
-            print()
+                print(f'\nEpoch {epoch + 1: >{len(str(epochs))}}/{epochs}')
+            self._run_epoch(X, y, batch_size, steps_per_epoch, shuffle)
 
             if validation_data:
                 targets = validation_data[1]
                 predictions = self.predict(validation_data[0])
 
-                error = np.around(self.cost.apply(targets, predictions), 4)
+                error = self.cost.apply(targets, predictions)
+                self.history['validation']['loss'].append(error)
+                error = np.around(error, 4)
 
                 if y.ndim == 2:
                     predictions = (predictions == predictions.max(axis=1)[:, None]).astype(int)
 
                 metrics = {}
                 for metric in self.metrics:
-                    metrics[f'{metric.__name__}'] = np.around(metric(targets, predictions), 4)
-                print(f'  Validation loss: {error}', end=' ')
-                print(' | '.join(map(lambda x: f'{x[0]}: {x[1]}', metrics.items())))
-
-            if not self.verbose:
-                continue
+                    acc = metric(targets, predictions)
+                    self.history['validation'][f'{metric.__name__}'].append(acc)
+                    metrics[f'{metric.__name__}'] = np.around(acc, 4)
+                if self.verbose:
+                    print(f'\n  Validation loss: {error}', end=' ')
+                    print(' | '.join(map(lambda x: f'{x[0]}: {x[1]}', metrics.items())))
 
             targets = y
             predictions = self.predict(X)
 
-            error = np.around(self.cost.apply(targets, predictions), 4)
+            error = self.cost.apply(targets, predictions)
+
+            self.history['overall']['loss'].append(error)
+            error = np.around(error, 4)
 
             if y.ndim == 2:
                 predictions = (predictions == predictions.max(axis=1)[:, None]).astype(int)
 
             metrics = {}
             for metric in self.metrics:
-                metrics[f'{metric.__name__}'] = np.around(metric(targets, predictions), 4)
+                acc = metric(targets, predictions)
+                self.history['overall'][f'{metric.__name__}'].append(acc)
+                metrics[f'{metric.__name__}'] = np.around(acc, 4)
 
-            print(f'  Overall loss: {error}', end=' ')
-            print(' | '.join(map(lambda x: f'{x[0]}: {x[1]}', metrics.items())))
-
-    def _run_epoch(self, X, y):
-        if self.batch_size and self.steps_per_epoch:
-            self.batch_size = len(X) // self.steps_per_epoch + 1
-        elif self.batch_size and not self.steps_per_epoch:
-            self.steps_per_epoch = len(X) // self.batch_size
-        elif self.steps_per_epoch and not self.batch_size:
-            self.batch_size = len(X) // self.steps_per_epoch + 1
-        else:
-            self.steps_per_epoch = 5
-            self.batch_size = len(X) // self.steps_per_epoch + 1
-
-        batches = self._get_batches(X, y, self.batch_size, self.shuffle)
-        for step, (X, y) in zip(range(self.steps_per_epoch), batches):
             if self.verbose:
-                print(f'  Step {step + 1: >{len(str(self.steps_per_epoch))}}/{self.steps_per_epoch}', end=' ... ')
+                print(f'  Overall loss: {error}', end=' ')
+                print(' | '.join(map(lambda x: f'{x[0]}: {x[1]}', metrics.items())))
+
+    def _run_epoch(self, X, y, batch_size, steps_per_epoch, shuffle):
+        if batch_size and steps_per_epoch:
+            batch_size = len(X) // steps_per_epoch + 1
+        elif batch_size and not steps_per_epoch:
+            steps_per_epoch = len(X) // batch_size
+        elif steps_per_epoch and not batch_size:
+            batch_size = len(X) // steps_per_epoch + 1
+        else:
+            steps_per_epoch = 5
+            batch_size = len(X) // steps_per_epoch + 1
+
+        batches = self._get_batches(X, y, batch_size, shuffle)
+        for step, (X, y) in zip(range(steps_per_epoch), batches):
+            if self.verbose:
+                print(f'  Step {step + 1: >{len(str(steps_per_epoch))}}/{steps_per_epoch}', end=' ... ')
             self._run_batch(X, y)
             if self.verbose:
                 print(f'done')
@@ -194,3 +202,23 @@ class Sequential(Model, ClassifierMixin):
         if classify:
             return (X == X.max(axis=1)[:, None]).astype(int)
         return X
+
+    def get_metadata(self):
+        allowed_keys = {
+            'built',
+            'metrics',
+            'trainable',
+            'verbose',
+        }
+        data = super().get_metadata()
+        data.update({'metrics': data['metrics_names']})
+        data = {k: v for k, v in data.items() if k in allowed_keys}
+        data['layers'] = {}
+        for layer in self.layers:
+            data['layers'].update({f'layer{layer._id}': layer.get_metadata()})
+            data['layers'][f'layer{layer._id}'].update({'type': layer.__class__.__name__})
+        return data
+
+    @classmethod
+    def build_from_config(cls, config):
+        pass
