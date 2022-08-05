@@ -19,8 +19,8 @@ y_test = encoder.transform(y_test)
 net = Sequential()
 
 net.add(
-    Dense(2, input_shape=4, activation='tanh'),
-    Dense(3, activation='tanh'),
+    Dense(64, input_shape=4, activation='tanh'),
+    Dense(64, activation='tanh'),
     Dense(3, activation='softmax')
 )
 
@@ -33,23 +33,14 @@ for train, validate in kf.split(X_train):
         X_train[train],
         y_train[train],
         epochs=10,
-        validation_data=(X_train[validate], y_train[validate]),
-        verbose=False
+        validation_data=(X_train[validate], y_train[validate])
     )
 
 
-# predictions = net.predict(X_test, classify=True)
-# print()
-# print(confusion_matrix(y_test, predictions))
-# print()
-# print(accuracy_score(y_test, predictions))
-# print()
-# print(accuracy_by_label(y_test, predictions))
-
-
-from pprint import pprint
-# print('net.history')
-# pprint(net.history)
-# print()
-print('net.get_metadata')
-pprint(net.get_metadata())
+predictions = net.predict(X_test, classify=True)
+print()
+print(confusion_matrix(y_test, predictions))
+print()
+print(accuracy_score(y_test, predictions))
+print()
+print(accuracy_by_label(y_test, predictions))
