@@ -109,8 +109,7 @@ class Model(MetadataMixin, SaveMixin):
 
     @type_safe
     @not_none
-    def fit(self, *,
-            verbose: bool = True):
+    def fit(self, *, verbose: bool = True):
         self._check_compiled()
         self.verbose = verbose
 
