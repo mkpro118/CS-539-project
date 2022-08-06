@@ -1,5 +1,4 @@
 from typing import Union
-from numbers import Real, Integral
 import numpy as np
 from collections import defaultdict
 
@@ -10,7 +9,6 @@ from .save_mixin import SaveMixin
 
 from ..exceptions import ExceptionFactory
 from ..utils.typesafety import type_safe, not_none
-from ..model_selection import KFold
 
 from ..metrics import (
     accuracy_score,
@@ -55,16 +53,20 @@ class Model(MetadataMixin, SaveMixin):
         `save`
     '''
 
-    def __init__(self):
+    def __init__(self, *, name: str = None, num_checkpoints: int = 5):
+        self.name = name or f'{self.__class__.__name__} Model'
         self.history = {
             'overall': defaultdict(list),
             'validation': defaultdict(list),
         }
+        self.num_checkpoints = num_checkpoints
         self.checkpoints = []
+        self.best_accuracy = 0.
+        self.best_loss = 0.
         self._trainable = True
 
     @type_safe
-    @not_none
+    @not_none(nullable=('metrics',))
     def compile(self, cost: Union[str, ActivationMixin], metrics: Union[list, tuple]):
         if isinstance(cost, str):
             cost = known_costs.get(cost, None)
@@ -76,12 +78,16 @@ class Model(MetadataMixin, SaveMixin):
                 )
 
         self.cost = cost
+        self.cost_name = getattr(cost, 'name', 'unrecognized cost')
 
         self.metrics = set()
         self.metrics_names = []
 
         if not metrics:
             metrics = ['accuracy_score']
+        else:
+            if 'accuracy_score' not in metrics and accuracy_score not in metrics:
+                metrics.append('accuracy_score')
 
         for metric in metrics:
             if isinstance(metric, str):
@@ -124,9 +130,6 @@ class Model(MetadataMixin, SaveMixin):
         for i in range(0, n_samples, batch_size):
             idxs = indices[i: min(i + batch_size, n_samples)]
             yield X[idxs], y[idxs]
-
-    def checkpoint(self):
-        self.checkpoints.append(self.get_metadata())
 
     def _train(self, X: np.ndarray, y: np.ndarray):
         raise errors['NotImplementedError'](
