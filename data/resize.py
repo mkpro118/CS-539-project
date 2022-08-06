@@ -2,45 +2,59 @@ import os
 from PIL import Image
 from concurrent.futures import ProcessPoolExecutor
 
-width, height = 108, 135
+width, height = 224, 244
 
 
 def process(args):
-    root, name = args
-    img = Image.open(os.path.join(root, name)).copy()
+    original, resized, name = args
+    img = Image.open(os.path.join(original, name)).copy()
     img = img.resize((width, height))
-    img.save(os.path.join(root, name))
+    img.save(os.path.join(resized, name))
 
 
 def all_(args):
-    files, _root = args
+    files, _root, _new = args
     with ProcessPoolExecutor() as executor:
-        results = executor.map(process, ((_root, i) for i in files))
+        results = executor.map(process, ((_root, _new, i) for i in files))
+        for result in results:
+            pass
+
+
+def resize(shape):
+    nonlocal width, height
+
+    width, height = shape
+
+    original_folders = (
+        'images/original/bishop/',
+        'images/original/knight/',
+        'images/original/pawn/',
+        'images/original/queen/',
+        'images/original/rook/',
+    )
+
+    new_folders = (
+        'images/resized/bishop/',
+        'images/resized/knight/',
+        'images/resized/pawn/',
+        'images/resized/queen/',
+        'images/resized/rook/',
+    )
+
+    for folder in original_folders:
+        assert os.path.isdir(folder)
+
+    for new_folder in new_folders:
+        if not os.path.isdir(new_folder):
+            os.makedirs(new_folder)
+
+    files = tuple((next(os.walk(folder))[2] for folder in original_folders))
+
+    with ProcessPoolExecutor() as executor:
+        results = executor.map(all_, (zip(files, original_folders, new_folders)))
         for result in results:
             pass
 
 
 if __name__ == '__main__':
-    b_root = 'images/resized/bishop/'
-    k_root = 'images/resized/knight/'
-    p_root = 'images/resized/pawn/'
-    q_root = 'images/resized/queen/'
-    r_root = 'images/resized/rook/'
-
-    b_files = next(os.walk(b_root))[2]
-    k_files = next(os.walk(k_root))[2]
-    p_files = next(os.walk(p_root))[2]
-    q_files = next(os.walk(q_root))[2]
-    r_files = next(os.walk(r_root))[2]
-    with ProcessPoolExecutor() as executor:
-        results = executor.map(
-            all_, (
-                (b_files, b_root,),
-                (k_files, k_root,),
-                (p_files, p_root,),
-                (q_files, q_root,),
-                (r_files, r_root,),
-            )
-        )
-        for result in results:
-            pass
+    resize(width, height)
