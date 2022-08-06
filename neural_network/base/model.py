@@ -124,7 +124,7 @@ class Model(MetadataMixin, SaveMixin):
     def _get_batches(self, X: np.ndarray, y: np.ndarray,
                      batch_size: int, shuffle: bool):
         n_samples = len(X)
-        indices = np.arange(n_samples)
+        indices = np.arange(n_samples, dtype=int)
         if shuffle:
             np.random.default_rng().shuffle(indices)
         for i in range(0, n_samples, batch_size):
