@@ -23,28 +23,28 @@ If you find any bugs in the software, please open an issue, or report the bug [h
         + Minor change: Added summary, support for history, checkpoints, building models from config dictionaries.
         + **Major change**: `fit` now takes in a _bool_ **keyword** argument `get_trainer`, which returns a _generator object_ than will run one epoch of training each time `next` is called. When executed in this manner, the call to `next` will return a dictionary of the loss and accuracy after running that epoch of training. If validation data is provided, the loss and accuracy over the validation data is also returned. The dictionary returned is of exactly the following format.
             + If validation data is **NOT** specified
-        ```py
-        {
-            'overall': {
-                'loss': loss,
-                'accuracy': accuracy,
-            },
-        }
-        ```
+            ```py
+            {
+                'overall': {
+                    'loss': loss,
+                    'accuracy': accuracy,
+                },
+            }
+            ```
             + If validation data is specified
-        ```py
-        {
-            'overall': {
-                'loss': loss,
-                'accuracy': accuracy,
-            },
-            'validation': {
-                'loss': loss,
-                'accuracy': accuracy,
-            },
-        }
-        ```
-        Using the generator from get_trainer gives users better control over the number of steps in training, as well as flexibilty to use the step by step data for inference
+            ```py
+            {
+                'overall': {
+                    'loss': loss,
+                    'accuracy': accuracy,
+                },
+                'validation': {
+                    'loss': loss,
+                    'accuracy': accuracy,
+                },
+            }
+            ```
+        Using the generator from `get_trainer` gives users better control over the number of steps in training, as well as flexibilty to use the step by step data for inference
 
 
 ## Change Log (August 4, 2022)
