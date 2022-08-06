@@ -1,5 +1,42 @@
 # Update Logs
 
+## Change Log (August 5, 2022)
++ Module ['data'](https://github.com/mkpro118/CS-539-project/tree/main/data)
+    + Larger set of raw images have been added and renamed. (Total 651 files)
++ Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
+    + [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py): Added support for history, checkpoints, summary and properties `trainable_params`, `non_trainable_params`
+    + [`model.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/model.py): Added support for history, checkpoints
++ Module [`neural_network.layers`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/layers)
+    + [`convolutional.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/convolutional.py), [`dense.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/dense.py), [`flatten.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/flatten.py) added support for building from config dictionaries, `__str__` implemented
++ Module [`neural_network.model`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model)
+    + [`sequential.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model/sequential.py)
+        + Minor change: Added summary, support for history, checkpoints, building models from config dictionaries.
+        + Major change: `fit` now taken in a _bool_ **keyword** argument `get_trainer`, which returns a _generator object_ than will run one epoch of training each time `next` is called. When executed in this manner, the call to `next` will return a dictionary of the loss and accuracy after running that epoch of training. If validation data is provided, the loss and accuracy over the validation data is also returned. The dictionary returned is of exactly the following format.
+        If validation data is **NOT** specified
+        ```py
+        {
+            'overall': {
+                'loss': loss,
+                'accuracy': accuracy,
+            },
+        }
+        ```
+        If validation data is specified
+        ```py
+        {
+            'overall': {
+                'loss': loss,
+                'accuracy': accuracy,
+            },
+            'validation': {
+                'loss': loss,
+                'accuracy': accuracy,
+            },
+        }
+        ```
+        Using the generator from get_trainer gives users better control over the number of steps in training, as well as flexibilty to use the step by step data for inference
+
+
 ## Change Log (August 4, 2022)
 + Module `neural_network.aux_math` has been removed, all required functionality is available in the scipy library
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
