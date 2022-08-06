@@ -343,13 +343,42 @@ class Layer(MetadataMixin, SaveMixin):
         else:
             MethodInvalidator.register(optimizer)
 
+    @property
+    def trainable_params(self):
+        if not self.trainable:
+            return 0
+        if not hasattr(self, 'weights'):
+            return 0
+        if self.use_bias:
+            return np.prod(self.weights.shape) + np.prod(self.bias.shape)
+        return np.prod(self.weights.shape)
+
+    @trainable_params.setter
+    def trainable_params(self, value):
+        raise ValueError('trainable_params is a read only property')
+
+    @property
+    def non_trainable_params(self):
+        if self.trainable:
+            return 0
+        if not hasattr(self, 'weights'):
+            return 0
+        if self.use_bias:
+            return np.prod(self.weights.shape) + np.prod(self.bias.shape)
+        return np.prod(self.weights.shape)
+
+    @non_trainable_params.setter
+    def non_trainable_params(self, value):
+        raise ValueError('non_trainable_params is a read only property')
+
     @type_safe
     @not_none
     def get_metadata(self):
         data = super().get_metadata()
-        data.update({
-            'activation': self._activation,
-        })
+        if hasattr(self, '_activation'):
+            data.update({
+                'activation': self._activation,
+            })
         return data
 
     @type_safe
