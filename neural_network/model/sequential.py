@@ -109,8 +109,8 @@ class Sequential(Model, ClassifierMixin):
         s = (
             f'Sequential Model: \'{self.name}\' with {num_layers} layers\n'
             f'{self}\n'
-            f'Total Trainable Params = {trainable_params}\n'
-            f'Total Non-Trainable Params = {non_trainable_params}'
+            f'Total Trainable Params = {trainable_params:,}\n'
+            f'Total Non-Trainable Params = {non_trainable_params:,}'
         )
         if return_:
             return s
