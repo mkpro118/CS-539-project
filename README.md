@@ -324,9 +324,10 @@ If you find any bugs in the software, please open an issue, or report the bug [h
 │    │    ├── typesafety.py
 │    ├── __init__.py
 ├── __init__.py
+├── .gitattributes
+├── .gitignore
 ├── Convolutional Example.ipynb
 ├── Example.ipynb
 ├── main.py
-├── .gitignore
 ├── README.md
 ```
