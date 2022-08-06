@@ -11,7 +11,6 @@ from ..layers import Convolutional, Dense, Flatten
 from ..utils.typesafety import type_safe, not_none
 from ..utils.exports import export
 
-
 errors = {
     'SequentialModelError': ExceptionFactory.register('SequentialModelError'),
 }
@@ -126,7 +125,8 @@ class Sequential(Model, ClassifierMixin):
             steps_per_epoch: Union[int, Integral, np.integer] = None,
             shuffle: bool = True,
             validation_data: Union[np.ndarray, list, tuple] = None,
-            verbose: bool = True):
+            verbose: bool = True,
+            get_trainer: bool = False):
 
         super().fit(
             verbose=verbose,
@@ -137,11 +137,17 @@ class Sequential(Model, ClassifierMixin):
                 f'Training labels must be a 1 or 2 dimensional array'
             )
 
-        self._train(X, y, validation_data, epochs, batch_size, steps_per_epoch, shuffle)
+        trainer = self._train(X, y, validation_data, epochs, batch_size, steps_per_epoch, shuffle)
+        if get_trainer:
+            return trainer
+
+        for _ in trainer:
+            pass
 
     def _train(self, X, y, validation_data, epochs, batch_size, steps_per_epoch, shuffle):
         if not epochs:
             epochs = 10
+
         for epoch in range(epochs):
             if self.verbose:
                 print(f'\nEpoch {epoch + 1: >{len(str(epochs))}}/{epochs}')
@@ -187,6 +193,21 @@ class Sequential(Model, ClassifierMixin):
             if self.verbose:
                 print(f'  Overall loss: {error}', end=' ')
                 print(' | '.join(map(lambda x: f'{x[0]}: {x[1]}', metrics.items())))
+
+            _data = {
+                'overall': {
+                    'loss': self.history['overall']['loss'][-1],
+                    'accuracy': self.history['overall']['accuracy_score'][-1],
+                },
+            }
+            if validation_data:
+                _data.update({
+                    'validation': {
+                        'loss': self.history['validation']['loss'][-1],
+                        'accuracy': self.history['validation']['accuracy_score'][-1],
+                    },
+                })
+            yield _data
 
             acc = self.history['overall']['accuracy_score'][-1]
             if not self.checkpoints:
