@@ -26,9 +26,8 @@ known_layers = {
 @export
 class Sequential(Model, ClassifierMixin):
     @type_safe
-    def __init__(self, *, layers: Layer = None, from_model: 'Sequential' = None,
-                 num_checkpoints: int = 5, name: str = None):
-        super().__init__(name=name, num_checkpoints=num_checkpoints)
+    def __init__(self, *, layers: Layer = None, from_model: 'Sequential' = None):
+        super().__init__()
         self.layers = []
 
         if from_model is not None:
@@ -77,7 +76,7 @@ class Sequential(Model, ClassifierMixin):
                 f'keyword argument input_shape on the first layer to define an input shape'
             )
 
-        for _id, layer in enumerate(self.layers, start=1):
+        for _id, layer in enumerate(self.layers):
             next_dim = layer.build(_id, next_dim)
 
         for layer in reversed(self.layers):
@@ -99,22 +98,6 @@ class Sequential(Model, ClassifierMixin):
             )
 
         self.built = True
-
-    @type_safe
-    @not_none
-    def summary(self, return_: bool = False):
-        trainable_params = sum((layer.trainable_params for layer in self.layers))
-        non_trainable_params = sum((layer.non_trainable_params for layer in self.layers))
-        num_layers = len(self.layers)
-        s = (
-            f'Sequential Model: \'{self.name}\' with {num_layers} layers\n'
-            f'{self}\n'
-            f'Total Trainable Params = {trainable_params}\n'
-            f'Total Non-Trainable Params = {non_trainable_params}'
-        )
-        if return_:
-            return s
-        print(s)
 
     @type_safe
     @not_none
@@ -188,28 +171,6 @@ class Sequential(Model, ClassifierMixin):
                 print(f'  Overall loss: {error}', end=' ')
                 print(' | '.join(map(lambda x: f'{x[0]}: {x[1]}', metrics.items())))
 
-            acc = self.history['overall']['accuracy_score'][-1]
-            if not self.checkpoints:
-                self.checkpoints.append((
-                    Sequential.build_from_config(self.get_metadata()),
-                    acc,
-                    error,
-                ))
-                self.best_accuracy = acc
-                self.best_loss = error
-            elif any((acc > b_acc for _, b_acc, _ in self.checkpoints)):
-                sort_spec = ((1, True,), (2, False))
-                self.checkpoints.append((
-                    Sequential.build_from_config(self.get_metadata()),
-                    acc,
-                    error,
-                ))
-                for idx, rev in sort_spec[::-1]:
-                    self.checkpoints.sort(key=lambda x: x[idx], reverse=rev)
-                self.checkpoints = self.checkpoints[:self.num_checkpoints]
-                self.best_accuracy = self.checkpoints[0][1]
-                self.best_loss = sorted(self.checkpoints, key=lambda x: x[2])[0][2]
-
     def _run_epoch(self, X, y, batch_size, steps_per_epoch, shuffle):
         if batch_size and steps_per_epoch:
             batch_size = len(X) // steps_per_epoch + 1
@@ -244,16 +205,13 @@ class Sequential(Model, ClassifierMixin):
 
     def get_metadata(self):
         allowed_keys = {
-            'cost',
+            'built',
             'metrics',
             'trainable',
             'verbose',
         }
         data = super().get_metadata()
-        data.update({
-            'metrics': data['metrics_names'],
-            'cost': data['cost_name'],
-        })
+        data.update({'metrics': data['metrics_names']})
         data = {k: v for k, v in data.items() if k in allowed_keys}
         data['layers'] = {}
         for layer in self.layers:
@@ -263,100 +221,4 @@ class Sequential(Model, ClassifierMixin):
 
     @classmethod
     def build_from_config(cls, config):
-        allowed_keys = {
-            'cost',
-            'metrics',
-            'layers',
-            'trainable',
-            'verbose',
-        }
-
-        required_keys = {
-            'cost',
-            'layers',
-            'metrics',
-            'trainable',
-        }
-
-        for rkey in required_keys:
-            if rkey not in config:
-                raise errors['SequentialModelError'](
-                    f'config does not have required key \'{rkey}\''
-                )
-
-        data = {k: v for k, v in config.items() if k in allowed_keys}
-
-        model = cls()
-
-        layers = {
-            k: data['layers'][k] for k in sorted(
-                data['layers'].keys(),
-                key=lambda x: int(x.replace('layer', ''))
-            )
-        }
-
-        for idx, layer in enumerate(layers.values(), start=1):
-            if layer is not layers[f'layer{idx}']:
-                raise errors['SequentialModelError'](
-                    f'config is invalid, layer id\'s do not match'
-                )
-
-            if 'type' not in layer:
-                raise errors['SequentialModelError'](
-                    f'config is invalid, layer types are missing'
-                )
-
-            layer_type = known_layers[layer['type']]
-            required_layer_keys = layer_type._attrs
-            for rkey in required_layer_keys:
-                if rkey not in layer:
-                    raise errors['SequentialModelError'](
-                        f'config\'s  does not have required key \'{rkey}\''
-                    )
-            pos_params = tuple((layer[param] for param in layer_type.pos_params))
-            kw_params = {param: layer[param] for param in layer_type.kw_params}
-
-            model.add(layer_type(*pos_params, **kw_params))
-
-        model.compile(data['cost'], data['metrics'])
-        for layer in model.layers:
-            if layer.trainable:
-                layer.weights = layers[f'layer{layer._id}']['weights']
-                layer.bias = layers[f'layer{layer._id}']['bias']
-
-        setattr(model, 'trainable', data['trainable'])
-        setattr(model, 'verbose', data['verbose'])
-
-        return model
-
-    def __str__(self):
-        if not self.layers:
-            return f'Uncompiled model \'{self.name}\''
-        s = f'Input Shape: {tuple(self.layers[0].input_shape)}\n'
-
-        f = lambda x: (
-            max(map(lambda y: len(y[0]), x)),
-            max(map(lambda y: len(y[1]), x)),
-            max(map(lambda y: len(y[2]), x)),
-        )
-        x = tuple(map(lambda x: (f'{x._id}', f'{x.__class__.__name__}', f'{x}'), self.layers))
-        l0, l1, l2 = f(x)
-
-        _l1 = lambda x: ((_ := (l1 - x)) // 2, ((_ // 2) + (0 if (_ & 1 == 0) else 1)))
-        _l2 = lambda x: ((_ := (l2 - x)) // 2, ((_ // 2) + (0 if (_ & 1 == 0) else 1)))
-        f_ = lambda x: (
-            f'| {" " * (l0 - len(x[0]))}{x[0]} '
-            f'| {" " * _l1(len(x[1]))[0]}{x[1]}{" " * _l1(len(x[1]))[1]} '
-            f'| {" " * _l2(len(x[2]))[0]}{x[2]}{" " * _l2(len(x[2]))[1]} |'
-        )
-        l3 = max(map(len, map(f_, x)))
-        s += f"{'-' * l3}\n"
-        s += (
-            f'| {" " * (l0 - 1)}# '
-            f'| {" " * _l1(5)[0]}Layer{" " * _l1(5)[1]} '
-            f'| {" " * (_l2(4)[0])}Info{" " * (_l2(4)[1])} |\n'
-        )
-        s += f"{'-' * l3}\n"
-        s += '\n'.join(map(f_, x))
-        s += f"\n{'-' * l3}"
-        return s
+        pass
