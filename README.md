@@ -10,7 +10,15 @@ If you find any bugs in the software, please open an issue, or report the bug [h
 
 # Update Logs
 
-## Change Log (August 5, 2022)
+## Change Log (August 6, 2022)
++ Module [`data`](https://github.com/mkpro118/CS-539-project/tree/main/data)
+    + [`__init__.py`](https://github.com/mkpro118/CS-539-project/blob/main/data/__init__.py), added function `load_data` to load the images and labels
+    + Improved the implementation of [`resize.py`](https://github.com/mkpro118/CS-539-project/blob/main/data/resize.py) and [`grayscale.py`](https://github.com/mkpro118/CS-539-project/blob/main/data/grayscale.py)
++ Top Level
+    + Added file [`environment.yaml`] specifying python environment requirements
+    + Added file [`requirements.txt`] specifying required packages
+
+## Change Log (August 5-6, 2022)
 + Module [`data`](https://github.com/mkpro118/CS-539-project/tree/main/data)
     + Larger set of raw images have been added and renamed. (Total 651 files)
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
@@ -327,7 +335,9 @@ If you find any bugs in the software, please open an issue, or report the bug [h
 ├── .gitattributes
 ├── .gitignore
 ├── Convolutional Example.ipynb
+├── environment.yaml
 ├── Example.ipynb
 ├── main.py
 ├── README.md
+├── requirements.txt
 ```
