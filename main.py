@@ -1,5 +1,5 @@
-from neural_network.layers.dense import Dense
-from neural_network.model.sequential import Sequential
+from neural_network.layers import Dense
+from neural_network.model import Sequential
 from neural_network.model_selection import KFold, train_test_split
 from neural_network.metrics import confusion_matrix, accuracy_score, accuracy_by_label
 from neural_network.preprocess import OneHotEncoder
