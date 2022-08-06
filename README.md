@@ -21,7 +21,7 @@ If you find any bugs in the software, please open an issue, or report the bug [h
 + Module [`neural_network.model`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model)
     + [`sequential.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model/sequential.py)
         + Minor change: Added summary, support for history, checkpoints, building models from config dictionaries.
-        + **Major change**: `fit` now taken in a _bool_ **keyword** argument `get_trainer`, which returns a _generator object_ than will run one epoch of training each time `next` is called. When executed in this manner, the call to `next` will return a dictionary of the loss and accuracy after running that epoch of training. If validation data is provided, the loss and accuracy over the validation data is also returned. The dictionary returned is of exactly the following format.
+        + **Major change**: `fit` now takes in a _bool_ **keyword** argument `get_trainer`, which returns a _generator object_ than will run one epoch of training each time `next` is called. When executed in this manner, the call to `next` will return a dictionary of the loss and accuracy after running that epoch of training. If validation data is provided, the loss and accuracy over the validation data is also returned. The dictionary returned is of exactly the following format.
             + If validation data is **NOT** specified
         ```py
         {
