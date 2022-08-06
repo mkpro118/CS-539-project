@@ -17,31 +17,67 @@ errors = {
 
 @export
 class Convolutional(Layer):
+
+    pos_params = (
+        'filters',
+        'kernel_size',
+    )
+
+    kw_params = (
+        'input_shape',
+        'activation',
+        'trainable',
+        'use_bias',
+        'weights_constraints',
+        'bias_constraints',
+        'learning_rate',
+    )
+
+    _attrs = {
+        'activation',
+        'bias',
+        'bias_constraints',
+        'built',
+        'channels',
+        'filters',
+        'height',
+        'input_shape',
+        'kernel_size',
+        'learning_rate',
+        'name',
+        'output_shape',
+        'trainable',
+        'use_bias',
+        'weights',
+        'weights_constraints',
+        'width',
+    }
+
     @type_safe
     @not_none(nullable=('input_shape', 'activation', 'weights_constraints', 'bias_constraints',))
     def __init__(self, filters: Union[int, Integral, np.integer],
                  kernel_size: Union[int, Integral, np.integer], *,
                  input_shape: Union[np.ndarray, list, tuple] = None,
-                 stride: Union[int, Integral, np.integer] = None,
-                 padding: Union[int, Integral, np.integer] = None,
                  activation: Union[str, ActivationMixin] = None,
                  trainable: bool = True,
                  use_bias: bool = True,
                  weights_constraints: Union[np.ndarray, list, tuple] = None,
                  bias_constraints: Union[np.ndarray, list, tuple] = None,
-                 learning_rate: Union[np.floating, np.integer, float, Real, int, Integral] = 1e-2):
+                 learning_rate: Union[np.floating, np.integer, float, Real, int, Integral] = 1e-2,
+                 name: str = None):
         super().__init__(
             activation=activation,
             trainable=trainable,
             use_bias=use_bias,
             weights_constraints=weights_constraints,
-            bias_constraints=bias_constraints
+            bias_constraints=bias_constraints,
+            name=name
         )
         self.filters = int(filters)
         self.kernel_size = int(kernel_size)
         self.learning_rate = float(learning_rate)
 
-        if input_shape:
+        if input_shape is not None:
             self.input_shape = np.asarray(input_shape)
             if self.input_shape.ndim != 1 or len(self.input_shape) != 3:
                 raise errors['ConvolutionalLayerError'](
@@ -55,6 +91,7 @@ class Convolutional(Layer):
               _id: int,
               input_shape: Union[np.ndarray, list, tuple, int, Integral, np.integer] = None):
         self._id = _id
+        self.name = self.name or f'Convolutional Layer'
 
         input_shape = np.asarray(input_shape, dtype=int)
         if input_shape.ndim != 1 or len(input_shape) != 3:
@@ -127,3 +164,16 @@ class Convolutional(Layer):
         self.weights -= (self.learning_rate / len(self._X)) * kernels_gradient
         if self.use_bias:
             self.bias = self.bias - (self.learning_rate / len(self._X))
+
+    def __str__(self):
+        if not self.built:
+            return (
+                f'Convolutional Layer with {self.filters} filter{"s" if self.filters > 1 else ""}, '
+                f'{self.kernel_size}x{self.kernel_size} kernel '
+                f'(uninitialized)'
+            )
+        return (
+            f'{self.name} with {self.filters} filter{"s" if self.filters > 1 else ""}, '
+            f'{self.channels} channel{"s" if self.channels > 1 else ""}, '
+            f'{self.kernel_size}x{self.kernel_size} kernel'
+        )

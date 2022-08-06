@@ -16,6 +16,37 @@ errors = {
 
 @export
 class Dense(Layer):
+
+    pos_params = (
+        'nodes',
+    )
+
+    kw_params = (
+        'input_shape',
+        'activation',
+        'trainable',
+        'use_bias',
+        'weights_constraints',
+        'bias_constraints',
+        'learning_rate',
+    )
+
+    _attrs = {
+        'activation',
+        'bias',
+        'bias_constraints',
+        'built',
+        'input_shape',
+        'learning_rate',
+        'name',
+        'nodes',
+        'output_shape',
+        'trainable',
+        'use_bias',
+        'weights',
+        'weights_constraints',
+    }
+
     @type_safe
     @not_none(nullable=('input_shape', 'activation', 'weights_constraints', 'bias_constraints',))
     def __init__(self, nodes: Union[int, Integral, np.integer], *,
@@ -25,13 +56,15 @@ class Dense(Layer):
                  use_bias: bool = True,
                  weights_constraints: Union[np.ndarray, list, tuple] = None,
                  bias_constraints: Union[np.ndarray, list, tuple] = None,
-                 learning_rate: Union[np.floating, np.integer, float, Real, int, Integral] = 1e-2):
+                 learning_rate: Union[np.floating, np.integer, float, Real, int, Integral] = 1e-2,
+                 name: str = None):
         super().__init__(
             activation=activation,
             trainable=trainable,
             use_bias=use_bias,
             weights_constraints=weights_constraints,
-            bias_constraints=bias_constraints
+            bias_constraints=bias_constraints,
+            name=name
         )
         self.nodes = int(nodes)
         self.learning_rate = float(learning_rate)
@@ -49,6 +82,7 @@ class Dense(Layer):
               input_shape: Union[np.ndarray, list, tuple, int, Integral, np.integer] = None):
 
         self._id = _id
+        self.name = self.name or f'Dense Layer'
         if isinstance(input_shape, (int, Integral, np.integer)):
             input_shape = (input_shape,)
         input_shape = np.asarray(input_shape, dtype=int)
@@ -67,7 +101,8 @@ class Dense(Layer):
             self.bias[:] = 0
 
         self.built = True
-        return (self.nodes,)
+        self.output_shape = (self.nodes,)
+        return self.nodes
 
     @type_safe
     @not_none
@@ -94,3 +129,8 @@ class Dense(Layer):
         self.weights -= (self.learning_rate / len(self._X)) * (self._X.T @ gradient)
         if self.use_bias:
             self.bias -= (self.learning_rate / len(self._X))
+
+    def __str__(self):
+        if not self.built:
+            return f'Dense Layer with {self.nodes} nodes (uninitialized)'
+        return f'{self.name} with {self.nodes} nodes'
