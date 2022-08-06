@@ -25,7 +25,7 @@ known_layers = {
 @export
 class Sequential(Model, ClassifierMixin):
     @type_safe
-    def __init__(self, *, layers: Layer = None, from_model: 'Sequential' = None,
+    def __init__(self, *, layers: Union[list, tuple] = None, from_model: 'Sequential' = None,
                  num_checkpoints: int = 5, name: str = None):
         super().__init__(name=name, num_checkpoints=num_checkpoints)
         self.layers = []
@@ -194,21 +194,6 @@ class Sequential(Model, ClassifierMixin):
                 print(f'  Overall loss: {error}', end=' ')
                 print(' | '.join(map(lambda x: f'{x[0]}: {x[1]}', metrics.items())))
 
-            _data = {
-                'overall': {
-                    'loss': self.history['overall']['loss'][-1],
-                    'accuracy': self.history['overall']['accuracy_score'][-1],
-                },
-            }
-            if validation_data:
-                _data.update({
-                    'validation': {
-                        'loss': self.history['validation']['loss'][-1],
-                        'accuracy': self.history['validation']['accuracy_score'][-1],
-                    },
-                })
-            yield _data
-
             acc = self.history['overall']['accuracy_score'][-1]
             if not self.checkpoints:
                 self.checkpoints.append((
@@ -230,6 +215,23 @@ class Sequential(Model, ClassifierMixin):
                 self.checkpoints = self.checkpoints[:self.num_checkpoints]
                 self.best_accuracy = self.checkpoints[0][1]
                 self.best_loss = sorted(self.checkpoints, key=lambda x: x[2])[0][2]
+
+            _data = {
+                'overall': {
+                    'loss': self.history['overall']['loss'][-1],
+                    'accuracy': self.history['overall']['accuracy_score'][-1],
+                },
+            }
+
+            if validation_data:
+                _data.update({
+                    'validation': {
+                        'loss': self.history['validation']['loss'][-1],
+                        'accuracy': self.history['validation']['accuracy_score'][-1],
+                    },
+                })
+
+            yield _data
 
     def _run_epoch(self, X, y, batch_size, steps_per_epoch, shuffle):
         if batch_size and steps_per_epoch:
