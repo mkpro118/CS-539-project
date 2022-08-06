@@ -1,7 +1,17 @@
+# Authors of this project
+
++ Undergraduate students of CS 539: Introduction to Artificial Neural Networks (Summer 2022) at University of Wisconsin, Madison
+    + [Andrea Sandoval](https://github.com/catalinasandoval)
+    + [M K](https://github.com/mkpro118)
+
+The source code in this repository is completely free to use for any purposes [we'll feel honored :)].
+If you find any bugs in the software, please open an issue, or report the bug [here](mailto:mkpro118@gmail.com).
+
+
 # Update Logs
 
 ## Change Log (August 5, 2022)
-+ Module ['data'](https://github.com/mkpro118/CS-539-project/tree/main/data)
++ Module [`data`](https://github.com/mkpro118/CS-539-project/tree/main/data)
     + Larger set of raw images have been added and renamed. (Total 651 files)
 + Module [`neural_network.base`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/base)
     + [`layer.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/base/layer.py): Added support for history, checkpoints, summary and properties `trainable_params`, `non_trainable_params`
@@ -11,8 +21,8 @@
 + Module [`neural_network.model`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/model)
     + [`sequential.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/model/sequential.py)
         + Minor change: Added summary, support for history, checkpoints, building models from config dictionaries.
-        + Major change: `fit` now taken in a _bool_ **keyword** argument `get_trainer`, which returns a _generator object_ than will run one epoch of training each time `next` is called. When executed in this manner, the call to `next` will return a dictionary of the loss and accuracy after running that epoch of training. If validation data is provided, the loss and accuracy over the validation data is also returned. The dictionary returned is of exactly the following format.
-        If validation data is **NOT** specified
+        + **Major change**: `fit` now taken in a _bool_ **keyword** argument `get_trainer`, which returns a _generator object_ than will run one epoch of training each time `next` is called. When executed in this manner, the call to `next` will return a dictionary of the loss and accuracy after running that epoch of training. If validation data is provided, the loss and accuracy over the validation data is also returned. The dictionary returned is of exactly the following format.
+            + If validation data is **NOT** specified
         ```py
         {
             'overall': {
@@ -21,7 +31,7 @@
             },
         }
         ```
-        If validation data is specified
+            + If validation data is specified
         ```py
         {
             'overall': {
