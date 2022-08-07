@@ -99,7 +99,7 @@ def type_safe(func: Callable = None, *,
         # Keyword argument filter, type safety over that is not guaranteed
         kw_filter = lambda y: lambda x: x not in y
 
-        def validate_types(*args: tuple[tuple]):
+        def validate_types(*args: tuple):
             '''
             Validates the types from the tuples in args
             '''
