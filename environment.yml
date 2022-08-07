@@ -1,5 +1,5 @@
-name: data-science-handbook
+name: CS-539-project
 dependencies:
-  - python=3.9
+  - python=3.6
   - pip:
     - -r requirements.txt

@@ -39,7 +39,8 @@ class CostMixin:
                 f'function to specify the derivative of the cost function'
             )
 
-        if (n := len(errors)) > 0:
+        n = len(errors)
+        if n:
             errors = '\n'.join(errors)
             raise TypeError(
                 f'{n} error{"s" if n > 1 else ""} in {self.__class__}\n{errors}'

@@ -22,10 +22,11 @@ def ATTR_FILTER(attr: str) -> bool:
     Returns
         bool: True if `attr` passes all criteria, False otherwise
     '''
-    in_obj = attr in OBJ_ATTRS
-    is_dunder = attr.startswith('__') and attr.endswith('__')
-    is_private = attr.startswith('_')
-    return not any((in_obj, is_dunder, is_private))
+    return not any((
+        attr in OBJ_ATTRS,  # default attributes from object
+        attr.startswith('__') and attr.endswith('__'),  # dunder/magic methods
+        attr.startswith('_'),  # private variables
+    ))
 
 
 @mixin  # Prevents instantiation
@@ -57,5 +58,4 @@ class MetadataMixin:
         Returns
             dict: attribute names as the keys, and the corresponding values.
         '''
-        attrs = tuple(filter(ATTR_FILTER, dir(self)))
-        return {attr: _ for attr in attrs if not callable(_ := getattr(self, attr))}
+        return {attr: getattr(self, attr) for attr in filter(ATTR_FILTER, dir(self)) if not callable(getattr(self, attr))}

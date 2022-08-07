@@ -25,6 +25,13 @@ class ActivationMixin:
         # To display all errors at once
         errors = []
 
+        # Ensure that the subclass defines attribute `name`
+        name = getattr(self, 'name', None)
+        if not isinstance(name, str):
+            errors.append(
+                f'{self.__class__} must explicitly define a name attribute'
+            )
+
         # Ensure that the subclass defines method `apply`
         activation_fn = getattr(self, 'apply', None)
         if not callable(activation_fn):
@@ -43,7 +50,8 @@ class ActivationMixin:
                 f'function to specify the derivative of the activation function'
             )
 
-        if (n := len(errors)) > 0:
+        n = len(errors)
+        if n:
             errors = '\n'.join(errors)
             raise TypeError(f'{n} errors in {self.__class__}\n{errors}')
 

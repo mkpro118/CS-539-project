@@ -30,8 +30,9 @@ class MethodInvalidator:
 
     @staticmethod
     def validate(func: Callable):
-        if (_ := MethodInvalidator.get_id(func)) in MethodInvalidator.invalid_methods:
-            MethodInvalidator.invalid_methods.remove(_)
+        func = MethodInvalidator.get_id(func)
+        if func in MethodInvalidator.invalid_methods:
+            MethodInvalidator.invalid_methods.remove(func)
 
     @staticmethod
     def is_invocable(func: Callable) -> bool:

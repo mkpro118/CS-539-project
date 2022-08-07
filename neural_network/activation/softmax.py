@@ -13,7 +13,7 @@ class Softmax(ActivationMixin):
     Provides methods for the Softmax activation function
 
     It is defined as
-    f(X) = e ** X) / sum(e ** X)
+    f(X) = (e ** X) / sum(e ** X)
 
     It's derivative is defined as (in conjunction with Cross Entropy)
     f'(X) = 1
@@ -33,7 +33,8 @@ class Softmax(ActivationMixin):
         Returns:
             np.ndarray: The activated array
         '''
-        return (_ := np.exp(X)) / np.sum(_, axis=1, keepdims=True)
+        fx = np.exp(X)
+        return fx / np.sum(fx, axis=1, keepdims=True)
 
     @staticmethod
     @type_safe

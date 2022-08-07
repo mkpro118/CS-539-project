@@ -49,4 +49,5 @@ class Sigmoid(ActivationMixin):
         Returns:
             np.ndarray: The derivative with respect to the Sigmoid activation function
         '''
-        return (_ := Sigmoid.apply(X)) * (1 - _)
+        fx = Sigmoid.apply(X)
+        return fx * (1 - fx)

@@ -111,7 +111,7 @@ def type_safe(func: Callable = None, /,
                         annotation = get_subscripts(annotations(req, object))
 
                         # assert that the tuple of subscripts is not empty
-                        assert (n := len(annotation)) > 0
+                        assert annotation
                     except AssertionError:
                         # if it is empty, create a tuple of size 1
                         # in order to use the starred (*) expression

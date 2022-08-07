@@ -365,8 +365,16 @@ class Sequential(Model, ClassifierMixin):
         x = tuple(map(lambda x: (f'{x._id}', f'{x.__class__.__name__}', f'{x}'), self.layers))
         l0, l1, l2 = f(x)
 
-        _l1 = lambda x: ((_ := (l1 - x)) // 2, ((_ // 2) + (0 if (_ & 1 == 0) else 1)))
-        _l2 = lambda x: ((_ := (l2 - x)) // 2, ((_ // 2) + (0 if (_ & 1 == 0) else 1)))
+        def _l1(x):
+            _ = (l1 - x)
+            __ = _ // 2
+            return __, __ + (_ & 1)
+
+        def _l2(x):
+            _ = (l2 - x)
+            __ = _ // 2
+            return __, __ + (_ & 1)
+
         f_ = lambda x: (
             f'| {" " * (l0 - len(x[0]))}{x[0]} '
             f'| {" " * _l1(len(x[1]))[0]}{x[1]}{" " * _l1(len(x[1]))[1]} '
