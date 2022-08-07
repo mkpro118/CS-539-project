@@ -118,7 +118,7 @@ class LinearDiscriminantAnalysis(TransformMixin, MetadataMixin, SaveMixin):
 
     @type_safe
     @not_none
-    def transform(self, X: np.ndarray, y: np.ndarray = None, /, **kwargs):
+    def transform(self, X: np.ndarray, y: np.ndarray = None, **kwargs):
         '''
         Reduces the feature dimensions of a given matrix to the
         number of components specified in the LDA instance

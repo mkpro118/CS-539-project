@@ -29,7 +29,7 @@ class PrincipalComponentAnalysis(MetadataMixin, SaveMixin, TransformMixin):
 
     @type_safe(skip=('return',))
     @not_none(nullable=('y',))
-    def fit(self, X: np.ndarray, y: np.ndarray = None, /, **kwargs) -> 'PrincipalComponentAnalysis':
+    def fit(self, X: np.ndarray, y: np.ndarray = None, **kwargs) -> 'PrincipalComponentAnalysis':
         '''
         Fits the PCA instance with the given features and labels
 
@@ -100,8 +100,7 @@ class PrincipalComponentAnalysis(MetadataMixin, SaveMixin, TransformMixin):
 
     @type_safe(skip=('y',))
     @not_none(nullable=('y',))
-    def transform(self, X: np.ndarray, y: np.ndarray = None, /,
-                  **kwargs) -> np.ndarray:
+    def transform(self, X: np.ndarray, y: np.ndarray = None, **kwargs) -> np.ndarray:
         '''
         Reduces the feature dimensions of a given matrix to the
         number of components specified in the PCsA instance

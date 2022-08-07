@@ -11,7 +11,7 @@ SENTINEL_TUPLE = tuple()
 NONE_TYPE = type(None)
 
 
-def type_safe(func: Callable = None, /,
+def type_safe(func: Callable = None, *,
               skip: Iterable = SENTINEL_TUPLE):
     '''
     This decorator ensures type safety over type annotated functions
