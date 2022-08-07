@@ -11,7 +11,6 @@ except ImportError:
             return func
         else:
             return lambda fn, *a, **k: fn
-    return
 else:
     from .functools import unwrap
 
