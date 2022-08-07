@@ -272,7 +272,7 @@ def not_none(nullable: Union[Callable, Iterable] = SENTINEL_TUPLE,
         specs = getfullargspec(orig_func)
         kw_filter = lambda y: lambda x: x not in y
 
-        def validate_args(*args: tuple[tuple]):
+        def validate_args(*args: tuple):
             '''
             Validates the params are not None from the tuples in args
             '''
