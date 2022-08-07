@@ -86,18 +86,20 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
 
     import os
 
+    base = os.path.join(os.path.dirname(__file__), 'images')
+
     # Root folders
     roots = {
-        'original': os.path.join('.', 'images', 'original'),
-        'grayscaled': os.path.join('.', 'images', 'grayscaled'),
-        'resized': os.path.join('.', 'images', 'resized'),
+        'original': os.path.join(base, 'original'),
+        'grayscaled': os.path.join(base, 'grayscaled'),
+        'resized': os.path.join(base, 'resized'),
     }
 
     # Check root folders exist
     for root in roots.values():
         if not os.path.isdir(root):
             if mode == 'original':
-                raise RuntimeError('Fatal: subfolder \'original\' not found. Dataset is likely corrupted')
+                raise RuntimeError(f'Fatal: subfolder \'original\' not found. Dataset is likely corrupted')
             if mode in ['resized', 'grayscaled']:
                 import warnings
                 warnings.warn(f'subfolder \'{mode[:-1]}\' not found. Creating \'{root}\' and populating')
