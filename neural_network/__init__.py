@@ -6,4 +6,4 @@ if sys.version_info < (3, 6, 0):
 elif sys.version_info < (3, 8, 0):
     import warnings
     x, y, z = map(str, sys.version_info[:3])
-    warnings.warn('typing support is not compatible with python version ' + '.'.join((x, y, z)))
+    warnings.warn('typing support is not fully compatible with python version ' + '.'.join((x, y, z)))
