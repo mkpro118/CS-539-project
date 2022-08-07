@@ -169,7 +169,7 @@ class Layer(MetadataMixin, SaveMixin):
             raise errors['InvalidConstraintsError'](
                 f'weights_constraints parameter must be 1 dimensional with the first index being the '
                 f'lower bound of the weights, and the second index being the upper '
-                f'bound of the weights, found {constraint=}'
+                f'bound of the weights, found constraint={constraint}'
             )
 
     @MethodInvalidator.check_validity
@@ -188,7 +188,7 @@ class Layer(MetadataMixin, SaveMixin):
             raise errors['InvalidConstraintsError'](
                 f'bias_constraints parameter must be 1 dimensional with the first index being the '
                 f'lower bound of the bias, and the second index being the upper '
-                f'bound of the bias, found {constraint=}'
+                f'bound of the bias, found constraint={constraint}'
             )
 
     @MethodInvalidator.check_validity
@@ -319,7 +319,7 @@ class Layer(MetadataMixin, SaveMixin):
             raise errors['WeightInitializationError'](
                 f'scale parameter must be 1 dimensional with the first index being the '
                 f'lower bound of the scaled values, and the second index being the upper '
-                f'bound of the scaled values, found {scale=}'
+                f'bound of the scaled values, found scale={scale}'
             )
 
     @property

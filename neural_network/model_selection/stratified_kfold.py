@@ -67,13 +67,13 @@ class StratifiedKFold(KFold, MetadataMixin, SaveMixin):
 
         if np.all(self.n_splits > counts):
             raise ValueError(
-                f'{self.n_splits=} cannot be greater than the'
+                f'n_splits={self.n_splits} cannot be greater than the'
                 f' number of members in each class.'
             )
         if self.n_splits > min_groups:
             raise ValueError(
                 f'The least populated class in y has only {min_groups}'
-                f' members, which is less than {self.n_splits=}'
+                f' members, which is less than n_splits={self.n_splits}'
             )
 
         order = np.sort(by_label)

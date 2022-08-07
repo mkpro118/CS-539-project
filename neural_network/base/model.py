@@ -72,7 +72,7 @@ class Model(MetadataMixin, SaveMixin):
             cost = known_costs.get(cost, None)
             if cost is None:
                 raise errors['UnknownCostError'](
-                    f'{cost=} is not a recognized cost function. Known cost functions are '
+                    f'cost={cost} is not a recognized cost function. Known cost functions are '
                     f'{", ".join(known_costs.keys())}. Alternatively custom cost functions can '
                     f'be defined by subclassing neural_network.base.cost_mixin.CostMixin'
                 )
@@ -97,7 +97,7 @@ class Model(MetadataMixin, SaveMixin):
                 if metric is None:
                     self.metrics_names.pop()
                     raise errors['UnknownMetricError'](
-                        f'{metric=} is not a recognized metric function. Known metrics are '
+                        f'metric={metric} is not a recognized metric function. Known metrics are '
                         f'{", ".join(known_metrics.keys())}'
                     )
             self.metrics.add(metric)

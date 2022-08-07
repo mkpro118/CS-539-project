@@ -128,7 +128,7 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
                 root = roots[f'{mode}']
             except KeyError:
                 raise ValueError(
-                    f'{mode=} is not a supported mode. Supported modes '
+                    f'mode={mode} is not a supported mode. Supported modes '
                     'are one of [\'original\', \'resized\', \'grayscaled\']'
                 )
 
