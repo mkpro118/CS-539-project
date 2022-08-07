@@ -4,7 +4,7 @@ try:
     from typing import Callable, Iterable, Union
     from typing import get_args as get_subscripts  # not available in python versions < 3.8.0
 except ImportError:
-    get_subscripts = lambda *args, **kwargs: tuple(object, )  # no typesafety checks in subcripted annotations
+    get_subscripts = lambda *args, **kwargs: tuple((object,))  # no typesafety checks in subcripted annotations
     import warnings
     warnings.warn('Cannot perform typesafety checks on subcripted annotations')
 finally:
