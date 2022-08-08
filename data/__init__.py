@@ -13,27 +13,29 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
     The data can be customized to have any size, be colored or grayscaled
 
 
-    ======================== ==============
-    Classes                               5
-    Samples per class              variable
-      Class 0 (bishop)                  141
-      Class 1 (knight)                  174
-      Class 2 (pawn)                     82
-      Class 3 (queen)                   115
-      Class 4 (rook)                    139
-    Samples total                       651
-    Dimensionality                 variable
+    =============================== ==============
+    Classes                                      5
+    Samples per class                     variable
+      Class 0 (bishop)                         141
+      Class 1 (knight)                         174
+      Class 2 (pawn)                            82
+      Class 3 (queen)                          115
+      Class 4 (rook)                           139
+    Samples total                              651
+    Dimensionality                        variable
       If depth_first=True
-        If mode='original'     (3, 224, 224)
-        If mode='resized'          (3, h, w)
-        If mode='grayscaled'   (1, 224, 224)
+        If mode='original'           (3, 224, 224)
+        If mode='resized'                (3, h, w)
+        If mode='grayscaled'         (1, 224, 224)
+        If mode='resize grayscaled'      (1, h, w)
       If depth_first=False
-        If mode='original'     (224, 224, 3)
-        If mode='resized'        (custom, 3)
-        If mode='grayscaled'   (224, 224, 1)
+        If mode='original'           (224, 224, 3)
+        If mode='resized'              (custom, 3)
+        If mode='grayscaled'         (224, 224, 1)
+        If mode='resize grayscaled'      (h, w, 1)
 
-    Features                 real, positive
-    ======================== ==============
+    Features                        real, positive
+    =============================== ==============
 
     The Data object is a dictionary-like object, with the following attributes
         data: a numpy array of image data of the shape (samples, channels, height, width)
@@ -145,11 +147,11 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
                     raise RuntimeError(f'Fatal: subfolder \'{folder}\' not found. Dataset is likely corrupted!')
 
                 for image in Data.get_images(folder):
-                    if mode == 'resized':
+                    if mode == 'resized' or 'resized' in mode:
                         # Resize if required
                         if size:
                             image = Data.resize(image, size)
-                    elif mode == 'grayscaled':
+                    if mode == 'grayscaled' or 'grayscaled' in mode:
                         image = Data.grayscale(image)
 
                     # PIL Image to NumPy array, of shape (height, width, depth)
