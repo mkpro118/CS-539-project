@@ -162,7 +162,7 @@ class Sequential(Model, ClassifierMixin):
                 time = timeit.get_recent_execution_times('run_epoch')
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'Time taken: {mins}:{secs:06.3f} (mins)')
+                    print(f'Time taken: {int(mins)}:{secs:06.3f} (mins)')
                 elif time > 1:
                     print(f'Time taken: {time:06.3f} (s)')
                 else:
