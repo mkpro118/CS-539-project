@@ -106,7 +106,7 @@ class Layer(MetadataMixin, SaveMixin):
         If activation is of type string,
         '''
         if self.activation is None:
-            return MethodInvalidator.register(self.apply_activation)
+            self.activation = 'no_activation'
 
         if isinstance(self.activation, ActivationMixin):
             self._activation = activation_symbol_map_inv.get(self.activation, self.activation.__class__.__name__)
@@ -120,7 +120,6 @@ class Layer(MetadataMixin, SaveMixin):
                 f'activation={self.activation} is not a recognized activation function'
             )
 
-    @MethodInvalidator.check_validity(invalid_logic=lambda self, X: X)
     @type_safe
     def apply_activation(self, X: np.ndarray) -> np.ndarray:
         '''
