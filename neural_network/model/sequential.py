@@ -294,6 +294,12 @@ class Sequential(Model, ClassifierMixin):
         return X
 
     def get_metadata(self):
+        def to_list(d):
+            for k, v in d.items:
+                if isinstance(v, np.ndarray):
+                    d[k] = v.tolist()
+                if isinstance(v, dict):
+                    to_list(v)
         allowed_keys = {
             'cost',
             'metrics',
@@ -310,6 +316,7 @@ class Sequential(Model, ClassifierMixin):
         for layer in self.layers:
             data['layers'].update({f'layer{layer._id}': layer.get_metadata()})
             data['layers'][f'layer{layer._id}'].update({'type': layer.__class__.__name__})
+        to_list(data)
         return data
 
     @classmethod
