@@ -295,7 +295,7 @@ class Sequential(Model, ClassifierMixin):
 
     def get_metadata(self):
         def to_list(d):
-            for k, v in d.items:
+            for k, v in d.items():
                 if isinstance(v, np.ndarray):
                     d[k] = v.tolist()
                 if isinstance(v, dict):
