@@ -1,8 +1,22 @@
 from typing import Any
-from json import dumps
+from json import dumps, JSONEncoder
+import numpy as np
 
 from .mixin import mixin
 from ..utils.typesafety import type_safe, not_none
+
+
+class NumpyEncoder(JSONEncoder):
+    """ Special json encoder for numpy types """
+
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
 
 
 @mixin  # Prevents instantiation
@@ -45,7 +59,7 @@ class SaveMixin:
                 return
 
         # Convert data to json format
-        data_str = dumps(data, indent=4)
+        data_str = dumps(data, indent=4, cls=NumpyEncoder)
 
         # Write to file
         with open(filename, 'w') as f:

@@ -282,9 +282,13 @@ class Sequential(Model, ClassifierMixin):
     @timeit.register('run_batch', 'batch runner')
     def _run_batch(self, X, y):
         predictions = self.predict(X)
+        if self.verbose:
+            print('.', end='')
         error_gradient = self.cost.derivative(y, predictions) * self.final_activation.derivative(predictions)
         for layer in reversed(self.layers):
             error_gradient = layer.backward(error_gradient)
+        if self.verbose:
+            print('.', end=' ')
 
     def predict(self, X: np.ndarray, *, classify: bool = False):
         for layer in self.layers:
@@ -294,12 +298,6 @@ class Sequential(Model, ClassifierMixin):
         return X
 
     def get_metadata(self):
-        def to_list(d):
-            for k, v in d.items():
-                if isinstance(v, np.ndarray):
-                    d[k] = v.tolist()
-                if isinstance(v, dict):
-                    to_list(v)
         allowed_keys = {
             'cost',
             'metrics',
@@ -316,7 +314,6 @@ class Sequential(Model, ClassifierMixin):
         for layer in self.layers:
             data['layers'].update({f'layer{layer._id}': layer.get_metadata()})
             data['layers'][f'layer{layer._id}'].update({'type': layer.__class__.__name__})
-        to_list(data)
         return data
 
     @classmethod
