@@ -10,6 +10,14 @@ If you find any bugs in the software, please open an issue, or report the bug [h
 
 # Update Logs
 
+## Change Log (August 7, 2022)
++ ### Refactored code to be compatible with `python3 version >=3.6`
+    + See commit history to view the files changed
++ Module [`neural_network.layers`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/layers)
+    + Added [`BatchNormalization`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/layers/batch_normalization.py) Layer
++ Module [`neural_network.utils`](https://github.com/mkpro118/CS-539-project/tree/main/neural_network/utils)
+    + Added [`timeit.py`](https://github.com/mkpro118/CS-539-project/blob/main/neural_network/utils/timeit.py), to track training time
+
 ## Change Log (August 6, 2022)
 + Module [`data`](https://github.com/mkpro118/CS-539-project/tree/main/data)
     + [`__init__.py`](https://github.com/mkpro118/CS-539-project/blob/main/data/__init__.py), added function `load_data` to load the images and labels
