@@ -83,7 +83,6 @@ class BatchNormalization(Layer):
                 f'Input shape = {input_shape} is not supported, '
                 f'Only outputs from dense (len(shape)=1) or convolutional (len(shape)=3) layers are supported'
             )
-        print(f'building layer #{_id} with {self.input_shape = } | {weight_shape = }')
 
         self.weights = self.generate_weights(weight_shape)
         self.bias = self.generate_weights(weight_shape)
