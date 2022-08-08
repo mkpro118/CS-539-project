@@ -13,29 +13,29 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
     The data can be customized to have any size, be colored or grayscaled
 
 
-    =============================== ==============
-    Classes                                      5
-    Samples per class                     variable
-      Class 0 (bishop)                         141
-      Class 1 (knight)                         174
-      Class 2 (pawn)                            82
-      Class 3 (queen)                          115
-      Class 4 (rook)                           139
-    Samples total                              651
-    Dimensionality                        variable
+    ================================ ==============
+    Classes                                       5
+    Samples per class                      variable
+      Class 0 (bishop)                          141
+      Class 1 (knight)                          174
+      Class 2 (pawn)                             82
+      Class 3 (queen)                           115
+      Class 4 (rook)                            139
+    Samples total                               651
+    Dimensionality                         variable
       If depth_first=True
-        If mode='original'           (3, 224, 224)
-        If mode='resized'                (3, h, w)
-        If mode='grayscaled'         (1, 224, 224)
-        If mode='resize grayscaled'      (1, h, w)
+        If mode='original'            (3, 224, 224)
+        If mode='resized'                 (3, h, w)
+        If mode='grayscaled'          (1, 224, 224)
+        If mode='resized grayscaled'      (1, h, w)
       If depth_first=False
-        If mode='original'           (224, 224, 3)
-        If mode='resized'              (custom, 3)
-        If mode='grayscaled'         (224, 224, 1)
-        If mode='resize grayscaled'      (h, w, 1)
+        If mode='original'            (224, 224, 3)
+        If mode='resized'               (custom, 3)
+        If mode='grayscaled'          (224, 224, 1)
+        If mode='resized grayscaled'      (h, w, 1)
 
-    Features                        real, positive
-    =============================== ==============
+    Features                         real, positive
+    ================================ ==============
 
     The Data object is a dictionary-like object, with the following attributes
         data: a numpy array of image data of the shape (samples, channels, height, width)
@@ -66,8 +66,9 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
         mode: str, default = 'original'
             The type of data requested. Supported modes are
                 'original'
-                'resized'
+                'resized', defaults to (100, 100)
                 'grayscaled'
+                'resized grayscaled', defaults to (100, 100)
         return_X_y: bool, keyword only, default = False
             If True, returns the data and labels instead of a Data object
         size: tuple, keyword only, default = None
@@ -96,6 +97,7 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
         'original': os.path.join(base, 'original'),
         'grayscaled': os.path.join(base, 'grayscaled'),
         'resized': os.path.join(base, 'resized'),
+        'resized grayscaled': os.path.join(base, 'resized'),
     }
 
     # Check root folders exist
@@ -132,7 +134,7 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
             except KeyError:
                 raise ValueError(
                     f'mode={mode} is not a supported mode. Supported modes '
-                    'are one of [\'original\', \'resized\', \'grayscaled\']'
+                    'are one of [\'original\', \'resized\', \'grayscaled\', \'resized grayscaled\']'
                 )
 
             data = []
@@ -158,7 +160,7 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
                     image_array = np.array(image)
 
                     # grayscale images do not have depth, so expand dimensions to be uniform
-                    if mode == 'grayscaled':
+                    if mode == 'grayscaled' or 'grayscaled' in mode:
                         image_array = image_array[:, :, np.newaxis]
 
                     # Convert (height, width, depth) to (depth, height, width) if required
