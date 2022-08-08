@@ -284,9 +284,9 @@ class Sequential(Model, ClassifierMixin):
         predictions = self.predict(X)
         if self.verbose:
             print('.', end='')
-        error_gradient = self.cost.derivative(y, predictions) * self.final_activation.derivative(predictions)
+        error_gradient = np.clip(self.cost.derivative(y, predictions) * self.final_activation.derivative(predictions), -1e6, 1e6)
         for layer in reversed(self.layers):
-            error_gradient = layer.backward(error_gradient)
+            error_gradient = np.clip(layer.backward(error_gradient), -1e6, 1e6)
         if self.verbose:
             print('.', end=' ')
 
