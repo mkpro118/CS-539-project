@@ -73,6 +73,7 @@ class Convolutional(Layer):
             bias_constraints=bias_constraints,
             name=name
         )
+
         self.filters = int(filters)
         self.kernel_size = int(kernel_size)
         self.learning_rate = float(learning_rate)
@@ -135,27 +136,43 @@ class Convolutional(Layer):
                 f'given input\'s feature shape is not equal to the expected input feature shape, '
                 f'{X.shape[1:]} != {self.input_shape}'
             )
+
         self._X = X
+
         output = np.empty(shape=(len(X), *self.output_shape))
+
         for x in range(len(X)):
             for f in range(self.filters):
                 for c in range(self.channels):
                     output[x, f] = correlate2d(self._X[x, c], self.weights[f, c], mode='valid')
+
         output = output + self.bias
+
         return self.apply_activation(output)
 
     @type_safe
     @not_none
     def backward(self, gradient: np.ndarray, **kwargs):
-        kernels_gradient = np.empty(self.weights.shape)
+        if self.trainable:
+            kernels_gradient = np.empty(self.weights.shape)
+
         _gradient = np.empty((len(gradient), *self.input_shape))
+
         for x in range(len(self._X)):
             for f in range(self.filters):
                 for c in range(self.channels):
-                    kernels_gradient[f, c] = correlate2d(self._X[x, c], gradient[x, f], mode='valid')
-                    _gradient[x, c] += convolve2d(gradient[x, f], self.weights[f, c], mode='full')
+                    full_conv = convolve2d(gradient[x, f], self.weights[f, c], mode='full')
+                    _ = np.nanmean(full_conv)
+                    full_conv = np.nan_to_num(full_conv, nan=_, posinf=_, neginf=-_)
 
-        self.optimize(kernels_gradient, gradient)
+                    _gradient[x, c] += full_conv
+
+                    if self.trainable:
+                        kernels_gradient[f, c] = correlate2d(self._X[x, c], gradient[x, f], mode='valid')
+
+        if self.trainable:
+            self.optimize(kernels_gradient, gradient)
+
         return _gradient
 
     @type_safe
