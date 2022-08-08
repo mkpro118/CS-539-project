@@ -34,7 +34,7 @@ class Sigmoid(ActivationMixin):
         Returns:
             np.ndarray: The activated array
         '''
-        return expit(X)
+        return expit(np.clip(X, -500, 500))
 
     @staticmethod
     @type_safe

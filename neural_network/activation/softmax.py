@@ -33,7 +33,7 @@ class Softmax(ActivationMixin):
         Returns:
             np.ndarray: The activated array
         '''
-        fx = np.exp(X)
+        fx = np.exp(np.clip(X, -500, 500))
         return fx / np.sum(fx, axis=1, keepdims=True)
 
     @staticmethod
