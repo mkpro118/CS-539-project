@@ -1,3 +1,4 @@
+from scipy.special import expit
 import numpy as np
 
 from ..utils.typesafety import type_safe, not_none
@@ -33,7 +34,7 @@ class Sigmoid(ActivationMixin):
         Returns:
             np.ndarray: The activated array
         '''
-        return np.power((1 + np.exp(-X)), -1)
+        return expit(X)
 
     @staticmethod
     @type_safe
