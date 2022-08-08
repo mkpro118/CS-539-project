@@ -92,8 +92,8 @@ class BatchNormalization(Layer):
         if not self.use_bias:
             self.bias[:] = 0
 
-        self.moving_mean = np.zeros(weight_shape)
-        self.moving_var = np.ones(weight_shape)
+        self.moving_mean = np.zeros(weight_shape, dtype=np.float256)
+        self.moving_var = np.ones(weight_shape, dtype=np.float256)
 
         self.built = True
         return tuple((_ for _ in self.output_shape))
