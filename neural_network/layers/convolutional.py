@@ -33,7 +33,7 @@ class Convolutional(Layer):
         'learning_rate',
     )
 
-    _attrs = {
+    _attrs = (
         'activation',
         'bias',
         'bias_constraints',
@@ -51,7 +51,7 @@ class Convolutional(Layer):
         'weights',
         'weights_constraints',
         'width',
-    }
+    )
 
     @type_safe
     @not_none(nullable=('input_shape', 'activation', 'weights_constraints', 'bias_constraints',))

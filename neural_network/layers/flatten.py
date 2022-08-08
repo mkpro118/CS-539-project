@@ -15,11 +15,11 @@ errors = {
 class Flatten(Layer):
     pos_params = tuple()
 
-    kw_params = {
+    kw_params = (
         'name',
-    }
+    )
 
-    _attrs = {
+    _attrs = (
         'activation',
         'bias_constraints',
         'built',
@@ -29,7 +29,7 @@ class Flatten(Layer):
         'trainable',
         'use_bias',
         'weights_constraints'
-    }
+    )
 
     @type_safe
     def __init__(self, *, name: str = None):

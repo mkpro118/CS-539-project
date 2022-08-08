@@ -20,20 +20,22 @@ class BatchNormalization(Layer):
         'name',
     }
 
-    _attrs = {
+    _attrs = (
         'bias',
         'bias_constraints',
         'built',
         'input_shape',
         'learning_rate',
         'momentum',
+        'moving_mean',
+        'moving_var',
         'name',
         'output_shape',
         'trainable',
         'use_bias',
         'weights',
         'weights_constraints',
-    }
+    )
 
     @type_safe
     def __init__(self, *, input_shape: Union[int, np.ndarray, list, tuple] = None,
@@ -107,15 +109,15 @@ class BatchNormalization(Layer):
             self._X = X
             assert len(self._X.shape) in (2, 4)
             if len(self._X.shape) == 2:
-                self.mean = self._X.mean(axis=0)
-                self.var = ((self._X - self.mean) ** 2).mean(axis=0)
+                self._mean = self._X.mean(axis=0)
+                self._var = ((self._X - self._mean) ** 2).mean(axis=0)
             else:
-                self.mean = self._X.mean(axis=(0, 2, 3), keepdims=True)
-                self.var = ((self._X - self.mean) ** 2).mean(axis=(0, 2, 3), keepdims=True)
-            self._X_norm = (self._X - self.mean) / np.sqrt(self.var + self.eps)
+                self._mean = self._X.mean(axis=(0, 2, 3), keepdims=True)
+                self._var = ((self._X - self._mean) ** 2).mean(axis=(0, 2, 3), keepdims=True)
+            self._X_norm = (self._X - self._mean) / np.sqrt(self._var + self.eps)
 
-            self.moving_mean = self.momentum * self.moving_mean + (1.0 - self.momentum) * self.mean
-            self.moving_var = self.momentum * self.moving_var + (1.0 - self.momentum) * self.var
+            self.moving_mean = self.momentum * self.moving_mean + (1.0 - self.momentum) * self._mean
+            self.moving_var = self.momentum * self.moving_var + (1.0 - self.momentum) * self._var
         return self.weights * self._X_norm + self.bias
 
     @type_safe
@@ -125,9 +127,9 @@ class BatchNormalization(Layer):
         dbeta = np.sum(gradient, axis=0)
 
         m = self._X.shape[0]
-        t = 1. / np.sqrt(self.var + self.eps)
+        t = 1. / np.sqrt(self._var + self.eps)
 
-        diff = self._X - self.mean
+        diff = self._X - self._mean
 
         dx = (self.weights * t / m) * (m * gradient - np.sum(gradient, axis=0) - t**2 * (diff) * np.sum(gradient * (diff), axis=0))
 

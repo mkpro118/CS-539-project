@@ -31,7 +31,7 @@ class Dense(Layer):
         'learning_rate',
     )
 
-    _attrs = {
+    _attrs = (
         'activation',
         'bias',
         'bias_constraints',
@@ -45,7 +45,7 @@ class Dense(Layer):
         'use_bias',
         'weights',
         'weights_constraints',
-    }
+    )
 
     @type_safe
     @not_none(nullable=('input_shape', 'activation', 'weights_constraints', 'bias_constraints',))
