@@ -52,7 +52,7 @@ class Flatten(Layer):
 
     @type_safe
     @not_none
-    def forward(self, X: np.ndarray) -> np.ndarray:
+    def forward(self, X: np.ndarray, **kwargs) -> np.ndarray:
         if X.ndim == 2:
             return X
         result = X.reshape(len(X), self.output_shape)
@@ -60,7 +60,7 @@ class Flatten(Layer):
 
     @type_safe
     @not_none
-    def backward(self, X) -> np.ndarray:
+    def backward(self, X, **kwargs) -> np.ndarray:
         result = X.reshape(len(X), *self.input_shape)
         return result
 

@@ -129,7 +129,7 @@ class Convolutional(Layer):
 
     @type_safe
     @not_none
-    def forward(self, X: np.ndarray) -> np.ndarray:
+    def forward(self, X: np.ndarray, **kwargs) -> np.ndarray:
         if (X.shape[1:] != self.input_shape).any():
             raise errors['ConvolutionalLayerError'](
                 f'given input\'s feature shape is not equal to the expected input feature shape, '
@@ -146,7 +146,7 @@ class Convolutional(Layer):
 
     @type_safe
     @not_none
-    def backward(self, gradient: np.ndarray):
+    def backward(self, gradient: np.ndarray, **kwargs):
         kernels_gradient = np.empty(self.weights.shape)
         _gradient = np.empty((len(gradient), *self.input_shape))
         for x in range(len(self._X)):

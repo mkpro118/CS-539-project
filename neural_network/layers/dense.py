@@ -102,11 +102,11 @@ class Dense(Layer):
 
         self.built = True
         self.output_shape = (self.nodes,)
-        return self.nodes
+        return self.output_shape
 
     @type_safe
     @not_none
-    def forward(self, X: np.ndarray) -> np.ndarray:
+    def forward(self, X: np.ndarray, **kwargs) -> np.ndarray:
         if X.shape[-1] != self.input_shape[-1]:
             raise errors['DenseLayerError'](
                 f'given input\'s feature shape is not equal to the expected input feature shape, '
@@ -118,7 +118,7 @@ class Dense(Layer):
 
     @type_safe
     @not_none
-    def backward(self, gradient: np.ndarray):
+    def backward(self, gradient: np.ndarray, **kwargs):
         _gradient = gradient @ self.weights.T
         self.optimize(gradient)
         return _gradient
