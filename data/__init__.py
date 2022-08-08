@@ -50,6 +50,7 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
             pawn
             queen
             rook
+        shape: tuple containing the shape of a single training sample
         unique_labels: a numpy array containing the unique labels
         unique_label_names: a numpy array containing the unique label names
 
@@ -171,6 +172,7 @@ def load_data(mode: str = 'original', *, return_X_y: bool = False,
             self['labels'] = self.labels = np.array(labels)
             self['images'] = self.images = tuple(images)  # np.array(images) gives a FutureWarning
             self['label_names'] = self.label_names = np.array(label_names)
+            self['shape'] = self.shape = self.data[0].shape
             self['unique_labels'] = self.unique_labels = np.arange(5, dtype=int)
             self['unique_label_names'] = self.unique_label_names = np.array(folders)
 
