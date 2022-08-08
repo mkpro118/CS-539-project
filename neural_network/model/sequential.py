@@ -265,7 +265,7 @@ class Sequential(Model, ClassifierMixin):
         batches = self._get_batches(X, y, batch_size, shuffle)
         for step, (X, y) in zip(range(steps_per_epoch), batches):
             if self.verbose:
-                print(f'  Step {step + 1: >{len(str(steps_per_epoch))}}/{steps_per_epoch}', end=' ... ')
+                print(f'  Step {step + 1: >{len(str(steps_per_epoch))}}/{steps_per_epoch}', end=' .')
             self._run_batch(X, y)
             if self.verbose:
                 print('Done.', end='\t\t')
