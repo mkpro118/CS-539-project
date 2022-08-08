@@ -154,6 +154,16 @@ class Sequential(Model, ClassifierMixin):
         if not epochs:
             epochs = 10
 
+        if batch_size and steps_per_epoch:
+            batch_size = len(X) // steps_per_epoch + 1
+        elif batch_size and not steps_per_epoch:
+            steps_per_epoch = len(X) // batch_size
+        elif steps_per_epoch and not batch_size:
+            batch_size = len(X) // steps_per_epoch + 1
+        else:
+            steps_per_epoch = 5
+            batch_size = len(X) // steps_per_epoch + 1
+
         for epoch in range(epochs):
             if self.verbose:
                 print(f'\nEpoch {epoch + 1: >{len(str(epochs))}}/{epochs}')
@@ -162,12 +172,23 @@ class Sequential(Model, ClassifierMixin):
                 time = timeit.get_recent_execution_times('run_epoch')
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'Time taken: {int(mins)}:{secs:06.3f} (mins)')
+                    print(f'Time taken: {int(mins)}:{secs:05.2f} (mins)', end='\t')
                 elif time > 1:
-                    print(f'Time taken: {time:06.3f} (s)')
+                    print(f'Time taken: {time:05.3f} (s)', end='\t')
                 else:
                     ms = time * 1000
-                    print(f'Time taken: {ms:07.3f} (ms)')
+                    print(f'Time taken: {ms:07.3f} (ms)', end='\t')
+
+                time = timeit.get_recent_execution_times('run_batch', steps_per_epoch)
+                time = sum(time) / steps_per_epoch
+                if time > 60:
+                    mins, secs = divmod(time, 60)
+                    print(f'[avg {int(mins)}:{secs:05.2f} (mins) / step]')
+                elif time > 1:
+                    print(f'[avg {time:05.3f} (s) / step]')
+                else:
+                    ms = time * 1000
+                    print(f'[avg {ms:07.3f} (ms) / step]')
 
             if validation_data:
                 targets = validation_data[1]
@@ -252,43 +273,56 @@ class Sequential(Model, ClassifierMixin):
 
     @timeit.register('run_epoch', 'epoch runner')
     def _run_epoch(self, X, y, batch_size, steps_per_epoch, shuffle):
-        if batch_size and steps_per_epoch:
-            batch_size = len(X) // steps_per_epoch + 1
-        elif batch_size and not steps_per_epoch:
-            steps_per_epoch = len(X) // batch_size
-        elif steps_per_epoch and not batch_size:
-            batch_size = len(X) // steps_per_epoch + 1
-        else:
-            steps_per_epoch = 5
-            batch_size = len(X) // steps_per_epoch + 1
-
         batches = self._get_batches(X, y, batch_size, shuffle)
         for step, (X, y) in zip(range(steps_per_epoch), batches):
             if self.verbose:
                 print(f'  Step {step + 1: >{len(str(steps_per_epoch))}}/{steps_per_epoch}', end=' .')
-            self._run_batch(X, y)
+            forward_prop, back_prop = self._run_batch(X, y)
             if self.verbose:
                 print('Done.', end='\t\t')
                 time = timeit.get_recent_execution_times('run_batch')
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'Time taken: {int(mins)}:{secs:06.3f} (mins)')
+                    print(f'Time taken: {int(mins)}:{secs:05.2f} (mins)')
                 elif time > 1:
-                    print(f'Time taken: {time:06.3f} (s)')
+                    print(f'Time taken: {time:05.3f} (s)')
                 else:
                     ms = time * 1000
                     print(f'Time taken: {ms:07.3f} (ms)')
 
+                time = forward_prop
+                if time > 60:
+                    mins, secs = divmod(time, 60)
+                    print(f'[forward: {int(mins)}:{secs:05.2f} (mins)', end=', ')
+                elif time > 1:
+                    print(f'[forward: {time:05.3f} (s)', end=', ')
+                else:
+                    ms = time * 1000
+                    print(f'[forward: {ms:07.3f} (ms)', end=', ')
+
+                time = back_prop
+                if time > 60:
+                    mins, secs = divmod(time, 60)
+                    print(f'backward: {int(mins)}:{secs:05.2f} (mins)]')
+                elif time > 1:
+                    print(f'backward: {time:05.3f} (s)]')
+                else:
+                    ms = time * 1000
+                    print(f'backward: {ms:07.3f} (ms)]')
+
     @timeit.register('run_batch', 'batch runner')
     def _run_batch(self, X, y):
-        predictions = self.predict(X)
+        with timeit() as forward_prop:
+            predictions = self.predict(X)
         if self.verbose:
             print('.', end='')
         error_gradient = np.clip(self.cost.derivative(y, predictions) * self.final_activation.derivative(predictions), -1e6, 1e6)
-        for layer in reversed(self.layers):
-            error_gradient = np.clip(layer.backward(error_gradient), -1e6, 1e6)
+        with timeit() as back_prop:
+            for layer in reversed(self.layers):
+                error_gradient = np.clip(layer.backward(error_gradient), -1e6, 1e6)
         if self.verbose:
             print('.', end=' ')
+        return forward_prop.time, back_prop.time
 
     def predict(self, X: np.ndarray, *, classify: bool = False):
         for layer in self.layers:
