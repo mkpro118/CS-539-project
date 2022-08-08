@@ -172,7 +172,7 @@ class Sequential(Model, ClassifierMixin):
                 time = timeit.get_recent_execution_times('run_epoch')
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'Time taken: {int(mins)}:{secs:05.2f} mins', end='\t')
+                    print(f'Time taken: {int(mins)}m {secs:05.2f}s', end='\t')
                 elif time > 1:
                     print(f'Time taken: {time:05.3f} s', end='\t')
                 else:
@@ -283,7 +283,7 @@ class Sequential(Model, ClassifierMixin):
                 time = timeit.get_recent_execution_times('run_batch')
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'Time taken: {int(mins)}:{secs:05.2f} mins', end=' ')
+                    print(f'Time taken: {int(mins)}m {secs:05.2f}s', end=' ')
                 elif time > 1:
                     print(f'Time taken: {time:05.3f} s', end=' ')
                 else:
@@ -293,7 +293,7 @@ class Sequential(Model, ClassifierMixin):
                 time = forward_prop
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'[forward: {int(mins)}:{secs:05.2f} mins', end=', ')
+                    print(f'[forward: {int(mins)}m {secs:05.2f}s', end=', ')
                 elif time > 1:
                     print(f'[forward: {time:05.3f} s', end=', ')
                 else:
