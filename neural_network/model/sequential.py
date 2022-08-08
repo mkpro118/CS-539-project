@@ -379,8 +379,8 @@ class Sequential(Model, ClassifierMixin):
         model.compile(data['cost'], data['metrics'])
         for layer in model.layers:
             if layer.trainable:
-                layer.weights = layers[f'layer{layer._id}']['weights']
-                layer.bias = layers[f'layer{layer._id}']['bias']
+                layer.weights = np.array(layers[f'layer{layer._id}']['weights'])
+                layer.bias = np.array(layers[f'layer{layer._id}']['bias'])
 
         setattr(model, 'trainable', data['trainable'])
         setattr(model, 'verbose', data['verbose'])
