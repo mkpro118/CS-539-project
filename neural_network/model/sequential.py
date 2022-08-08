@@ -172,12 +172,12 @@ class Sequential(Model, ClassifierMixin):
                 time = timeit.get_recent_execution_times('run_epoch')
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'Time taken: {int(mins)}:{secs:05.2f} (mins)', end='\t')
+                    print(f'Time taken: {int(mins)}:{secs:05.2f} mins', end='\t')
                 elif time > 1:
-                    print(f'Time taken: {time:05.3f} (s)', end='\t')
+                    print(f'Time taken: {time:05.3f} s', end='\t')
                 else:
                     ms = time * 1000
-                    print(f'Time taken: {ms:07.3f} (ms)', end='\t')
+                    print(f'Time taken: {ms:07.3f} ms', end='\t')
 
                 time = timeit.get_recent_execution_times('run_batch', steps_per_epoch)
                 time = sum(time) / steps_per_epoch
@@ -185,10 +185,10 @@ class Sequential(Model, ClassifierMixin):
                     mins, secs = divmod(time, 60)
                     print(f'[avg {int(mins)}:{secs:05.2f} (mins) / step]')
                 elif time > 1:
-                    print(f'[avg {time:05.3f} (s) / step]')
+                    print(f'[avg {time:05.3f} s / step]')
                 else:
                     ms = time * 1000
-                    print(f'[avg {ms:07.3f} (ms) / step]')
+                    print(f'[avg {ms:07.3f} ms / step]')
 
             if validation_data:
                 targets = validation_data[1]
@@ -283,32 +283,32 @@ class Sequential(Model, ClassifierMixin):
                 time = timeit.get_recent_execution_times('run_batch')
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'Time taken: {int(mins)}:{secs:05.2f} (mins)')
+                    print(f'Time taken: {int(mins)}:{secs:05.2f} mins', end=' ')
                 elif time > 1:
-                    print(f'Time taken: {time:05.3f} (s)')
+                    print(f'Time taken: {time:05.3f} s', end=' ')
                 else:
                     ms = time * 1000
-                    print(f'Time taken: {ms:07.3f} (ms)')
+                    print(f'Time taken: {ms:07.3f} ms', end=' ')
 
                 time = forward_prop
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'[forward: {int(mins)}:{secs:05.2f} (mins)', end=', ')
+                    print(f'[forward: {int(mins)}:{secs:05.2f} mins', end=', ')
                 elif time > 1:
-                    print(f'[forward: {time:05.3f} (s)', end=', ')
+                    print(f'[forward: {time:05.3f} s', end=', ')
                 else:
                     ms = time * 1000
-                    print(f'[forward: {ms:07.3f} (ms)', end=', ')
+                    print(f'[forward: {ms:07.3f} ms', end=', ')
 
                 time = back_prop
                 if time > 60:
                     mins, secs = divmod(time, 60)
-                    print(f'backward: {int(mins)}:{secs:05.2f} (mins)]')
+                    print(f'backward: {int(mins)}:{secs:05.2f} mins]')
                 elif time > 1:
-                    print(f'backward: {time:05.3f} (s)]')
+                    print(f'backward: {time:05.3f} s]')
                 else:
                     ms = time * 1000
-                    print(f'backward: {ms:07.3f} (ms)]')
+                    print(f'backward: {ms:07.3f} ms]')
 
     @timeit.register('run_batch', 'batch runner')
     def _run_batch(self, X, y):
