@@ -16,6 +16,8 @@ class NumpyEncoder(JSONEncoder):
             return float(obj)
         elif isinstance(obj, np.ndarray):
             return obj.tolist()
+        elif isinstance(obj, set):
+            return tuple(obj)
         return JSONEncoder.default(self, obj)
 
 
