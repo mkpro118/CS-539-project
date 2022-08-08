@@ -39,3 +39,10 @@ class timeit:
     @staticmethod
     def get_groups():
         return dict(timeit.groups)
+
+    def __enter__(self):
+        self.start = perf_counter()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.time = perf_counter() - self.start
