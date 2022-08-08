@@ -162,8 +162,9 @@ class Convolutional(Layer):
             for f in range(self.filters):
                 for c in range(self.channels):
                     full_conv = convolve2d(gradient[x, f], self.weights[f, c], mode='full')
-                    _ = np.nanmean(full_conv)
-                    full_conv = np.nan_to_num(full_conv, nan=_, posinf=_, neginf=-_)
+                    if np.isnan(full_conv).any():
+                        _ = np.nanmean(full_conv)
+                        full_conv = np.nan_to_num(full_conv, nan=_, posinf=_, neginf=-_)
 
                     _gradient[x, c] += full_conv
 
