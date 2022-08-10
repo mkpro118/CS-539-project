@@ -7,7 +7,7 @@
     + Added [`Custom Model Experiment`](https://github.com/mkpro118/CS-539-project/blob/main/Custom%20Model%20Experiment.ipynb), experiment had a **83.77%** Accuracy
     + Added [`Experiment With ResNet50`](https://github.com/mkpro118/CS-539-project/blob/main/Experiment%20WIth%20ResNet50.ipynb), experiment had a **100%** Accuracy
     + Added [`Experiment with 10 layers`](https://github.com/mkpro118/CS-539-project/blob/main/Experiment%20with%2010%20layers.ipynb), experiment _failed_
-+ Moved change log to [`CHANGELOG`](https://github.com/mkpro118/CS-539-project/blob/main/CHANGELOG.md)
++ Moved change log here
 
 ## Change Log (August 7, 2022)
 + ### Refactored code to be compatible with `python3 version >=3.6`
